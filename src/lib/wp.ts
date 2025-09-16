@@ -59,10 +59,26 @@ export const getPostsInfo = async (slug: string) => {
 	return {title, content, seo};
 }
 
-export const getLatestPosts = async ({perPage = 10}: {perPage?: number}) => {
+export const getIdCategoryByName = async (name: string) => {
+	const res = await fetch(`${apiURL}/categories?search=${name}`);
+
+	if (!res.ok)
+		throw new Error('Failed to fetch category ID');
+
+	const [data] = await res.json();
+	if (!data) throw new Error('Category not found');
+
+	return data.id;
+};
+
+export const getLatestPosts = async ({category, perPage = 10}: {category: string, perPage?: number}) => {
 	const token = await getToken();
 
-	const res = await fetch(`${apiURL}/posts?per_page=${perPage}&_embed`, {
+	const categoryId = await getIdCategoryByName(category);
+
+	if (!categoryId) throw new Error('Invalid category');
+
+	const res = await fetch(`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
@@ -75,7 +91,9 @@ export const getLatestPosts = async ({perPage = 10}: {perPage?: number}) => {
 	if (!resultados || resultados.length === 0)
 		throw new Error('No posts found');
 
-	const posts = resultados.map((post: PostsCards) => {
+	const posts = resultados.map((post: any) => {
+		console.log({post});
+
 		const {
 			id,
 			title: {rendered: title},
@@ -101,6 +119,63 @@ export const getLatestPosts = async ({perPage = 10}: {perPage?: number}) => {
 
 	return posts;
 };
+
+export const getCuriosities = async () => {
+	const Curiosities = [
+		{
+			icon: "✨",
+			title: "La ciencia de la intuición",
+			description:
+				"La neurociencia revela que nuestros “presentimientos” procesan información más rápido que el pensamiento consciente.",
+		},
+		{
+			icon: "📜",
+			title: "Sabiduría antigua, validación moderna",
+			description:
+				"Prácticas milenarias como la meditación y la respiración hoy son confirmadas por la psicología moderna.",
+		},
+		{
+			icon: "☕",
+			title: "El poder del ritual",
+			description:
+				"Pequeños rituales diarios pueden reprogramar nuestro cerebro para mayor resiliencia y bienestar.",
+		},
+		{
+			icon: "📖",
+			title: "Las historias moldean la realidad",
+			description:
+				"Los relatos que nos contamos literalmente reconfiguran nuestro cerebro y transforman nuestra vida.",
+		},
+	]
+
+	return Curiosities;
+};
+
+export const getReviews = async ({perPage = 3}) => {
+	const reviews = [
+		{
+			name: "Sarah Mitchell",
+			role: "Life Coach",
+			text: "Este libro transformó por completo mi visión del crecimiento personal. Los ejercicios prácticos cambiaron mi vida.",
+			rating: 4.5,
+		},
+		{
+			name: "David Chen",
+			role: "Terapeuta",
+			text: "Una mezcla magistral de sabiduría antigua y psicología moderna. Lo recomiendo a todos mis pacientes.",
+			rating: 5,
+		},
+		{
+			name: "Maria Rodriguez",
+			role: "Wellness Practitioner",
+			text: "El Viaje Interior ofrece profundas ideas con claridad y compasión. Verdaderamente excepcional.",
+			rating: 3.5,
+		},
+	]
+
+	return reviews.slice(0, perPage);
+
+}
 
 const getToken = async (): Promise<string> => {
 	const res = await fetch(jwtURL, {

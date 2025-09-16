@@ -9,34 +9,7 @@ interface Props {
   curiosities?: Curiosity[];
 }
 
-const {
-  curiosities = [
-    {
-      icon: "✨",
-      title: "La ciencia de la intuición",
-      description:
-        "La neurociencia revela que nuestros “presentimientos” procesan información más rápido que el pensamiento consciente.",
-    },
-    {
-      icon: "📜",
-      title: "Sabiduría antigua, validación moderna",
-      description:
-        "Prácticas milenarias como la meditación y la respiración hoy son confirmadas por la psicología moderna.",
-    },
-    {
-      icon: "☕",
-      title: "El poder del ritual",
-      description:
-        "Pequeños rituales diarios pueden reprogramar nuestro cerebro para mayor resiliencia y bienestar.",
-    },
-    {
-      icon: "📖",
-      title: "Las historias moldean la realidad",
-      description:
-        "Los relatos que nos contamos literalmente reconfiguran nuestro cerebro y transforman nuestra vida.",
-    },
-  ],
-} = Astro.props;
+const { curiosities } = Astro.props;
 ---
 
 <section id="curiosities" class="py-20 px-4">
@@ -46,14 +19,20 @@ const {
     </h2>
     <div class="grid md:grid-cols-2 gap-8 gap-y-6 text-center md:text-left">
       {
-        curiosities.map((item) => (
-          <div class="p-6 bg-[var(--card)] border border-[var(--border)] rounded-lg hover:shadow-md transition">
-            <h3 class="text-xl font-semibold mb-2">
-              {item.icon} {item.title}
-            </h3>
-            <p class="text-[var(--muted-foreground)]">{item.description}</p>
-          </div>
-        ))
+        curiosities && curiosities.length > 0 ? (
+          curiosities.map((item) => (
+            <div class="p-6 bg-[var(--card)] border border-[var(--border)] rounded-lg hover:shadow-md transition">
+              <h3 class="text-xl font-semibold mb-2">
+                {item.icon} {item.title}
+              </h3>
+              <p class="text-[var(--muted-foreground)]">{item.description}</p>
+            </div>
+          ))
+        ) : (
+          <p class="text-center col-span-3 text-[var(--muted-foreground)]">
+            No hay curiosidades disponibles en este momento.
+          </p>
+        )
       }
     </div>
   </div>

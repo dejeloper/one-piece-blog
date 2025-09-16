@@ -92,8 +92,6 @@ export const getLatestPosts = async ({category, perPage = 10}: {category: string
 		throw new Error('No posts found');
 
 	const posts = resultados.map((post: any) => {
-		console.log({post});
-
 		const {
 			id,
 			title: {rendered: title},

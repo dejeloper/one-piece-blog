@@ -3,29 +3,12 @@ import "@fontsource-variable/inter";
 import "../styles/global.css";
 import SEO from "@components/layouts/SEO.astro";
 import Navbar from "@components/layouts/Navbar.astro";
-import Hero from "@components/layouts/Hero.astro";
-import Chapters from "@components/layouts/Chapters.astro";
-import Curiosities from "@components/layouts/Curiosities.astro";
-import Reviews from "@components/layouts/Reviews.astro";
-import Newsletter from "@components/layouts/Newsletter.astro";
-import Author from "@components/layouts/Author.astro";
-import Contact from "@components/layouts/Contact.astro";
 import Footer from "@components/layouts/Footer.astro";
 
-interface Props {
-  title?: string;
-  description?: string;
-  url?: string;
-  ogtitle?: string;
-  ogdescription?: string;
-  author?: string;
-  keywords?: string;
-}
-
-const { title, description, ogtitle, ogdescription, url, author, keywords } =
-  Astro.props;
+const { title } = Astro.props;
 
 const icon = "☠️";
+const name = "Mi Propio One Piece";
 ---
 
 <!doctype html>
@@ -40,40 +23,21 @@ const icon = "☠️";
 
     <!-- SEO -->
     <SEO
-      title={title || "Mi Propio One Piece"}
-      description={description || ""}
-      url={url || "https://www.onepiece.dejeloper.com"}
-      author={author || "Jhonatan Guerrero"}
-      keywords={keywords || "One Piece, Anime, Manga"}
-      ogtitle={ogtitle}
-      ogdescription={ogdescription}
+      title={Astro.props.title || name}
+      description=""
+      url="https://www.onepiece.dejeloper.com"
+      author="Jhonatan Guerrero"
+      keywords="One Piece, Anime, Manga, libertad, aventura, piratas, tesoro, Grand Line, Sombrero de Paja, Luffy, Zoro, Nami, Usopp, Sanji, Chopper, Robin, Franky, Brook, Jinbe"
+      ogtitle="ogtitle"
+      ogdescription="ogdescription"
     />
   </head>
   <body class="bg-[var(--background)] text-[var(--foreground)]">
     <!-- Navegación -->
-    <Navbar icon={icon} name={title} />
+    <Navbar icon={icon} name={name} />
 
-    <main>
-      <!-- Hero -->
-      <Hero />
-
-      <!-- Capítulos -->
-      <Chapters />
-
-      <!-- Curiosidades -->
-      <Curiosities />
-
-      <!-- Reseñas -->
-      <Reviews />
-
-      <!-- Newsletter -->
-      <Newsletter />
-
-      <!-- Sobre la autora -->
-      <Author />
-
-      <!-- Contacto -->
-      <Contact />
+    <main class="min-h-screen">
+      <slot />
     </main>
 
     <!-- Footer -->

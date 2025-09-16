@@ -2,59 +2,17 @@
 interface Chapter {
   id: string;
   title: string;
-  description: string;
-  link: string;
+  excerpt: string;
+  featuredImage?: string;
+  date: string;
+  slug: string;
 }
 
 interface Props {
   chapters?: Chapter[];
 }
 
-const {
-  chapters = [
-    {
-      id: "capitulo-1",
-      title: "Capítulo 1: La llamada a la aventura",
-      description:
-        "Todo viaje inicia con un primer paso hacia lo desconocido...",
-      link: "#capitulo-1",
-    },
-    {
-      id: "capitulo-2",
-      title: "Capítulo 2: Enfrentando las sombras",
-      description:
-        "Aprende a abrazar tus aspectos más oscuros y transformarlos...",
-      link: "#capitulo-2",
-    },
-    {
-      id: "capitulo-3",
-      title: "Capítulo 3: La brújula interior",
-      description:
-        "Confía en tu intuición y sigue tu guía interna, incluso en la duda...",
-      link: "#capitulo-3",
-    },
-    {
-      id: "capitulo-4",
-      title: "Capítulo 4: Sanando viejas heridas",
-      description:
-        "Entiende cómo el pasado moldea tu presente y aprende a liberarte...",
-      link: "#capitulo-4",
-    },
-    {
-      id: "capitulo-5",
-      title: "Capítulo 5: El poder de la presencia",
-      description:
-        "Descubre cómo vivir el presente puede transformar tu vida...",
-      link: "#capitulo-5",
-    },
-    {
-      id: "capitulo-6",
-      title: "Capítulo 6: Integración y plenitud",
-      description: "Une todas tus experiencias y vive como tu ser auténtico...",
-      link: "#capitulo-6",
-    },
-  ],
-} = Astro.props;
+const { chapters } = Astro.props;
 ---
 
 <section
@@ -67,22 +25,47 @@ const {
     </h2>
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
-        chapters.map((chapter) => (
-          <div class="bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition">
-            <h3 class="font-semibold text-lg mb-4 text-center md:text-left">
-              {chapter.title}
-            </h3>
-            <p class="text-[var(--muted-foreground)] mb-4 text-center md:text-left">
-              {chapter.description}
-            </p>
-            <a
-              href={chapter.link}
-              class="block text-center border border-[var(--border)] rounded-lg py-2 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition"
-            >
-              Leer más
-            </a>
-          </div>
-        ))
+        chapters && chapters.length > 0 ? (
+          chapters.map((chapter) => (
+            <div class="bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition">
+              {chapter.featuredImage && (
+                <img
+                  src={chapter.featuredImage}
+                  alt={chapter.title}
+                  class="w-full h-48 object-cover rounded mb-4"
+                  loading="lazy"
+                />
+              )}
+
+              <h3 class="font-semibold text-lg mb-2 text-center md:text-left">
+                {chapter.title}
+              </h3>
+              <p
+                class="text-[var(--muted-foreground)] mb-2 text-center md:text-left"
+                set:html={chapter.excerpt}
+              />
+
+              {chapter.date && (
+                <p class="text-xs text-[var(--muted-foreground)] mb-4 text-right mt-6">
+                  Publicado:{" "}
+                  {new Date(chapter.date).toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
+                </p>
+              )}
+              <a
+                href={chapter.slug}
+                class="block text-center border border-[var(--border)] rounded-lg py-2 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition"
+              >
+                Leer más
+              </a>
+            </div>
+          ))
+        ) : (
+          <p class="text-center col-span-3">No hay capítulos disponibles.</p>
+        )
       }
     </div>
   </div>

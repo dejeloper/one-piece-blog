@@ -1,49 +1,62 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Capther from "../components/Capther.astro";
-import { getPageInfo, getLatestPosts } from "../lib/wp";
+import {
+  getPageInfo,
+  getLatestPosts,
+  getCuriosities,
+  getReviews,
+} from "../lib/wp";
+import Hero from "@components/layouts/Hero.astro";
+import Author from "@components/layouts/Author.astro";
+import Chapters from "@components/layouts/Chapters.astro";
+import Contact from "@components/layouts/Contact.astro";
+import Curiosities from "@components/layouts/Curiosities.astro";
+import Newsletter from "@components/layouts/Newsletter.astro";
+import Reviews from "@components/layouts/Reviews.astro";
 
-const { title, content, seo } = await getPageInfo("home");
-const posts = await getLatestPosts({ perPage: 3 });
-
-interface Post {
-  title: string;
-  excerpt: string;
-  featuredImage: string;
-  date: string;
-  slug: string;
-}
+const { title } = await getPageInfo("home");
+const posts = await getLatestPosts({ category: "historia", perPage: 3 });
+const curiosities = await getCuriosities();
+const reviews = await getReviews({ perPage: 3 });
 ---
 
-<Layout title={seo.title} description={seo.description}>
-  <!-- <Layout title="as" description="as"> -->
-  <section class="bg-black text-white py-20">
-    <div class="container mx-auto px-4 text-center">
-      <h1 class="text-5xl font-bold mb-6">{title}</h1>
-      <div class="text-xl max-w-2xl mx-auto" set:html={content} />
-    </div>
-  </section>
+<Layout title="Mi Propio One Piece">
+  <!-- Hero -->
+  <Hero title={title} />
 
-  <section class="container mx-auto px-4 py-12">
-    <h2 class="text-3xl font-bold md-8 text-center">Últimos Capítulos</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {
-        posts.map((post: Post) => (
-          <Capther
-            title={post.title}
-            excerpt={post.excerpt}
-            featuredImage={post.featuredImage}
-            date={new Date(post.date).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-            slug={post.slug}
-          />
-        ))
-      }
-    </div>
-  </section>
+  <!-- Capítulos -->
+  {
+    posts && posts.length > 0 ? (
+      <Chapters chapters={posts} />
+    ) : (
+      <div class="sr-only">No hay capítulos disponibles.</div>
+    )
+  }
+
+  <!-- Curiosidades -->
+  {
+    curiosities && curiosities.length > 0 ? (
+      <Curiosities curiosities={curiosities} />
+    ) : (
+      <div class="sr-only">No hay curiosidades disponibles.</div>
+    )
+  }
+
+  <!-- Reseñas -->
+  {
+    reviews && reviews.length > 0 ? (
+      <Reviews reviews={reviews} title="Opiniones de los lectores" />
+    ) : (
+      <div class="sr-only">No hay reseñas disponibles.</div>
+    )
+  }
+
+  <!-- Newsletter -->
+  <Newsletter />
+
+  <!-- Sobre la autora -->
+  <Author />
+
+  <!-- Contacto -->
+  <Contact />
 </Layout>

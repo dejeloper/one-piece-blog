@@ -1,0 +1,47 @@
+---
+interface Props {
+  name?: string;
+  title?: string;
+  description?: string[];
+  image?: string;
+}
+
+const {
+  name = "Jhonatan Guerrero",
+  title = "Ingeniero de Sistemas y Desarrollador de Software",
+  description = [
+    "Con más de 10 años de experiencia, actualmente trabajo como especialista en desarrollo Fullstack y he colaborado en proyectos para empresas y diversas iniciativas como freelancer.",
+    "Soy originario de Bucaramanga y actualmente vivo en Mosquera, Cundinamarca.",
+    "Entre mis aficiones se encuentran leer novelas, escribir cuentos, <a class='underline hover:text-[var(--primary)]' href='https://www.instagram.com/dlwlrma' target='_blank'>IU</a>, One Piece y tejer.",
+  ],
+  image = "https://www.dejeloper.com/images/me_02.webp",
+} = Astro.props;
+---
+
+<section id="author" class="py-20 px-4">
+  <div
+    class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center text-center md:text-left"
+  >
+    <div>
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Sobre el autor</h2>
+      <h3 class="text-xl font-semibold mb-4">{name}</h3>
+      <p class="text-[var(--muted-foreground)] mb-4">{title}</p>
+      {
+        description.map((text) => (
+          <p class="text-[var(--muted-foreground)] mb-4" set:html={text} />
+        ))
+      }
+    </div>
+    <div>
+      <picture>
+        <source srcset={image} type="image/webp" />
+        <img
+          src={image}
+          alt={`Retrato de ${name}`}
+          loading="lazy"
+          class="rounded-lg shadow-lg mx-auto max-h-[400px] object-cover"
+        />
+      </picture>
+    </div>
+  </div>
+</section>

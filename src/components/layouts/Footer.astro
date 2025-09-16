@@ -1,0 +1,25 @@
+---
+const year = new Date().getFullYear();
+
+const name = "Mi propio One Piece";
+const icon = `☠️`;
+---
+
+<footer
+  class="py-12 px-4 bg-[var(--foreground)]/5 border-t border-[var(--border)]"
+>
+  <div
+    class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left"
+  >
+    <!-- Logo + Nombre -->
+    <div class="flex items-center space-x-2 mb-4 md:mb-0">
+      <span class="text-[var(--primary)] text-xl">{icon}</span>
+      <span class="font-semibold">{name}</span>
+    </div>
+
+    <!-- Derechos de autor -->
+    <p class="text-sm text-[var(--muted-foreground)]">
+      {year} - Jhonatan Guerrero.
+    </p>
+  </div>
+</footer>

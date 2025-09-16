@@ -1,0 +1,26 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getAllPostsSlugs, getPostsInfo } from "../../lib/wp";
+
+const slug = Astro.params.slug;
+if (!slug) {
+  throw new Error("Slug is required");
+}
+
+const { title, content, seo } = await getPostsInfo(slug);
+
+export async function getStaticPaths() {
+  const slugs: string[] = await getAllPostsSlugs();
+  return slugs.map((slug: string) => ({ params: { slug } }));
+}
+
+// const prerender = false;
+---
+
+<Layout title={seo.title} description={seo.description}>
+  <!-- <Layout title="as" description="as"> -->
+  <article class="max-w-2xl mx-auto prose">
+    <h1>{title}</h1>
+    <div class="text-xl" set:html={content} />
+  </article>
+</Layout>

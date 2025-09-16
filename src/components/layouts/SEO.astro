@@ -1,0 +1,68 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  url: string;
+  author: string;
+  keywords?: string;
+  ogtitle?: string;
+  ogdescription?: string;
+}
+
+const {
+  title,
+  description,
+  url,
+  author,
+  keywords = "",
+  ogtitle = title,
+  ogdescription = description,
+} = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: title,
+  author: {
+    "@type": "Person",
+    name: author,
+    url: url,
+  },
+  description,
+  url,
+  image: `${url}/images/preview.webp`,
+};
+---
+
+<title>{title}</title>
+
+<!-- Meta descripción -->
+<meta name="description" content={description} />
+
+<!-- Open Graph (para compartir en redes sociales) -->
+<meta property="og:title" content={ogtitle} />
+<meta property="og:description" content={ogdescription} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={`${url}/images/preview.webp`} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={ogtitle} />
+<meta name="twitter:description" content={ogdescription} />
+<meta name="twitter:image" content={`${url}/images/preview.webp`} />
+
+<!-- Autor -->
+<meta name="author" content={author} />
+
+<!-- Palabras clave -->
+<meta name="keywords" content={`libro, blog, ${author} ${title} ${keywords}`} />
+
+<!-- URL canónica -->
+<link rel="canonical" href={url} />
+
+<!-- Accesibilidad y rendimiento -->
+<meta name="theme-color" content="#b7d6d8" />
+
+<!-- Schema.org JSON-LD (para Google) -->
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

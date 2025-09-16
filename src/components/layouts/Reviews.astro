@@ -1,0 +1,67 @@
+---
+import Stars from "./Stars.astro";
+
+interface Review {
+  name: string;
+  role: string;
+  text: string;
+  rating: number;
+}
+
+interface Props {
+  title?: string;
+  reviews?: Review[];
+}
+
+const {
+  title = "Lo que dicen los lectores",
+  reviews = [
+    {
+      name: "Sarah Mitchell",
+      role: "Life Coach",
+      text: "Este libro transformó por completo mi visión del crecimiento personal. Los ejercicios prácticos cambiaron mi vida.",
+      rating: 4.5,
+    },
+    {
+      name: "David Chen",
+      role: "Terapeuta",
+      text: "Una mezcla magistral de sabiduría antigua y psicología moderna. Lo recomiendo a todos mis pacientes.",
+      rating: 5,
+    },
+    {
+      name: "Maria Rodriguez",
+      role: "Wellness Practitioner",
+      text: "El Viaje Interior ofrece profundas ideas con claridad y compasión. Verdaderamente excepcional.",
+      rating: 3.5,
+    },
+  ],
+} = Astro.props;
+---
+
+<section class="py-20 px-4 bg-[var(--secondary)]/20">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">{title}</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      {
+        reviews.map((review) => (
+          <div
+            class="p-6 bg-[var(--card)] border border-[var(--border)] rounded-lg text-center shadow-sm hover:shadow-lg transition select-none cursor-auto"
+            title={`${review.rating} de 5 estrellas`}
+          >
+            <div class="flex justify-center mb-4">
+              <Stars
+                rating={review.rating}
+                className="w-6 h-6 text-yellow-500"
+              />
+            </div>
+            <p class="italic text-[var(--muted-foreground)] mb-4">
+              “{review.text}”
+            </p>
+            <p class="font-semibold">{review.name}</p>
+            <p class="text-sm text-[var(--muted-foreground)]">{review.role}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

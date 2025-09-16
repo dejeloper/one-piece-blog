@@ -1,0 +1,46 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  image?: string;
+}
+
+const {
+  title = "El Viaje Interior: Una guía hacia el autodescubrimiento",
+  subtitle = "Emprende una exploración transformadora del espíritu humano y despierta la sabiduría que yace en tu interior.",
+  ctaText = "Leer capítulos",
+  ctaLink = "#chapters",
+  image = "/images/preview.webp",
+} = Astro.props;
+---
+
+<section id="home" class="py-20 px-4 animate-fade-in">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <!-- Texto -->
+    <div class="text-center md:text-left">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6">
+        {title}
+      </h1>
+      <p class="text-xl md:text-2xl text-[var(--muted-foreground)] mb-8">
+        {subtitle}
+      </p>
+      <a
+        href={ctaLink}
+        class="inline-block bg-[var(--primary)] text-[var(--primary-foreground)] px-8 py-3 rounded-lg font-semibold text-lg transition-transform hover:scale-105"
+      >
+        {ctaText}
+      </a>
+    </div>
+
+    <!-- Imagen -->
+    <div class="flex justify-center md:justify-end">
+      <img
+        src={image}
+        alt="Ilustración decorativa"
+        class="rounded-lg shadow-lg max-h-[400px] object-cover"
+      />
+    </div>
+  </div>
+</section>

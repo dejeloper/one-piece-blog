@@ -1,0 +1,25 @@
+---
+interface Props {
+  title: string;
+  body: string;
+  href: string;
+}
+const { title, body, href } = Astro.props;
+---
+
+<li class="list-none flex p-1 bg-[#23262d] rounded-lg shadow-inner">
+  <a
+    href={href}
+    class="w-full no-underline leading-1.4 p-[calc(1.5rem-1px)] rounded-lg text-white bg-[#2c2f36] opacity-80 transition-colors duration-300 hover:opacity-100 focus:opacity-100"
+  >
+    <h2
+      class="m-0 text-xl transition-colors duration-300 hover:text-white focus:text-white"
+    >
+      {title}
+      <span class="ml-1">&rarr;</span>
+    </h2>
+    <p class="mt-0 ml-0">
+      {body}
+    </p>
+  </a>
+</li>

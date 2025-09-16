@@ -55,7 +55,7 @@ const { name, icon } = Astro.props;
   <!-- Menú móvil -->
   <div
     id="mobile-menu"
-    class="fixed top-0 right-0 h-full w-full bg-[var(--background)] text-[var(--primary)] font-medium transform translate-x-full transition-transform duration-400 z-50"
+    class="fixed top-0 right-0 h-full w-full bg-[var(--background)] text-[var(--primary)] font-medium transform translate-x-full hidden transition-transform duration-400 z-50"
   >
     <ul
       class="flex flex-col space-y-4 p-6 mt-[64px] z-100 bg-[var(--background)] border-t border-[var(--border)]"
@@ -83,6 +83,7 @@ const { name, icon } = Astro.props;
     const overlay = document.getElementById("overlay");
 
     const toggleMenu = () => {
+      menu.classList.toggle("hidden");
       menu.classList.toggle("translate-x-full");
       overlay.classList.toggle("hidden");
       setTimeout(() => {

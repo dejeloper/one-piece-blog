@@ -1,26 +1,104 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import { getAllPostsSlugs, getPostsInfo } from "../../lib/wp";
+import Layout from "@layouts/Layout.astro";
+import { getAllPostsSlugs, getPostsInfo } from "@lib/wp";
 
 const slug = Astro.params.slug;
 if (!slug) {
   throw new Error("Slug is required");
 }
 
-const { title, content, seo } = await getPostsInfo(slug);
+const {
+  title,
+  date,
+  content,
+  excerpt,
+  featuredImage,
+  alt_text_image,
+  authorName,
+  authorAvatar,
+  authorDescription,
+} = await getPostsInfo(slug);
 
 export async function getStaticPaths() {
   const slugs: string[] = await getAllPostsSlugs();
   return slugs.map((slug: string) => ({ params: { slug } }));
 }
+const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
 
 // const prerender = false;
 ---
 
-<Layout title={seo.title} description={seo.description}>
-  <!-- <Layout title="as" description="as"> -->
-  <article class="max-w-2xl mx-auto prose">
-    <h1>{title}</h1>
-    <div class="text-xl" set:html={content} />
-  </article>
+<Layout title={title} description={excerpt}>
+  <main class="pt-8 pb-16 lg:pt-16 lg:pb-24 antialiased">
+    <article class="prose prose-lg mx-auto max-w-3xl px-4">
+      <!-- Título dinámico -->
+      <h1 class="text-4xl font-extrabold tracking-tight mb-6 text-center">
+        {title}
+      </h1>
+
+      <!-- Imagen destacada dinámica -->
+      {
+        featuredImage && (
+          <figure class="my-8">
+            <picture>
+              <img
+                src={featuredImage}
+                alt={title}
+                class="w-full h-auto object-cover rounded-xl shadow-md"
+                loading="lazy"
+              />
+            </picture>
+            {alt_text_image && (
+              <figcaption class="mt-2 text-xs text-gray-500 italic">
+                {alt_text_image}
+              </figcaption>
+            )}
+          </figure>
+        )
+      }
+
+      <!-- Contenido dinámico desde WordPress -->
+      <div
+        class="prose prose-lg mx-auto max-w-3xl leading-relaxed"
+        set:html={content}
+      />
+
+      <!-- Fecha de publicación -->
+      <p class="text-sm text-gray-500 mt-12 justify-end text-right">
+        Publicado el <span class="font-semibold">{dateFormatted}</span>
+      </p>
+
+      <!-- Caja del autor -->
+      <footer class="max-w-3xl sm:w-full mx-auto my-0 p-0 justify-center">
+        <div
+          class="w-full flex items-center justify-between gap-2 px-6 border border-gray-200 shadow-md rounded-xl bg-white my-0"
+        >
+          <!-- Avatar -->
+          <div class="flex-shrink-0 justify-end border-r pr-6">
+            <img
+              class="object-cover w-24 h-24 rounded-full ring-2 ring-primary-200"
+              src={authorAvatar}
+              alt={authorName}
+              loading="lazy"
+            />
+          </div>
+
+          <!-- Info -->
+          <div
+            class="w-full flex flex-col justify-start items-start ml-4 mr-0 p-0 my-auto"
+          >
+            <h3 class="text-lg font-semibold">{authorName}</h3>
+            <p class="text-sm text-gray-600">{authorDescription}</p>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
 </Layout>

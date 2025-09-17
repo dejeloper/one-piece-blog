@@ -16,8 +16,10 @@ const { name, icon } = Astro.props;
   <div class="container mx-auto px-4 py-4 flex items-center justify-between">
     <!-- Logo -->
     <div class="flex items-center space-x-2 z-60">
-      <span class="text-2xl font-bold text-[var(--primary)]">{icon}</span>
-      <span class="text-xl font-semibold tracking-wide">{name}</span>
+      <a href="/">
+        <span class="text-2xl font-bold text-[var(--primary)]">{icon}</span>
+        <span class="text-xl font-semibold tracking-wide">{name}</span>
+      </a>
     </div>
 
     <!-- Menú escritorio -->

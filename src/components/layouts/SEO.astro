@@ -5,8 +5,8 @@ interface Props {
   url: string;
   author: string;
   keywords?: string;
-  ogtitle?: string;
-  ogdescription?: string;
+  ogtitle: string;
+  ogdescription: string;
 }
 
 const {
@@ -15,8 +15,8 @@ const {
   url,
   author,
   keywords = "",
-  ogtitle = title,
-  ogdescription = description,
+  ogtitle,
+  ogdescription,
 } = Astro.props;
 
 const schema = {

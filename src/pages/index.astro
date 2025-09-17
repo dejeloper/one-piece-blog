@@ -20,7 +20,10 @@ const curiosities = await getCuriosities();
 const reviews = await getReviews({ perPage: 3 });
 ---
 
-<Layout title="Mi Propio One Piece">
+<Layout
+  title="Mi Propio One Piece"
+  description="Blog sobre mi propio One Piece. En búsqueda de mi libertad."
+>
   <!-- Hero -->
   <Hero title={title} />
 

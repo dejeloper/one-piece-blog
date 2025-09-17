@@ -5,7 +5,7 @@ import SEO from "@components/layouts/SEO.astro";
 import Navbar from "@components/layouts/Navbar.astro";
 import Footer from "@components/layouts/Footer.astro";
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 
 const icon = "☠️";
 const name = "Mi Propio One Piece";
@@ -24,12 +24,12 @@ const name = "Mi Propio One Piece";
     <!-- SEO -->
     <SEO
       title={Astro.props.title || name}
-      description=""
+      description={description || "Blog sobre mi propio One Piece"}
       url="https://www.onepiece.dejeloper.com"
       author="Jhonatan Guerrero"
       keywords="One Piece, Anime, Manga, libertad, aventura, piratas, tesoro, Grand Line, Sombrero de Paja, Luffy, Zoro, Nami, Usopp, Sanji, Chopper, Robin, Franky, Brook, Jinbe"
-      ogtitle="ogtitle"
-      ogdescription="ogdescription"
+      ogtitle={Astro.props.title || name}
+      ogdescription={description || "Blog sobre mi propio One Piece"}
     />
   </head>
   <body class="bg-[var(--background)] text-[var(--foreground)]">

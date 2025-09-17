@@ -151,7 +151,7 @@ export const getCuriosities = async () => {
 		},
 	]
 
-	return Curiosities;
+	return []; // Curiosities;
 };
 
 export const getReviews = async ({perPage = 3}) => {
@@ -176,7 +176,7 @@ export const getReviews = async ({perPage = 3}) => {
 		},
 	]
 
-	return reviews.slice(0, perPage);
+	return [];// reviews.slice(0, perPage);
 
 }
 

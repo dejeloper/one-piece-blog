@@ -40,13 +40,13 @@ export const getPageInfo = async (slug: string) => {
 	const [data] = await res.json()
 	if (!data) throw new Error('Page not found')
 
-	const {title: {rendered: title}, content: {rendered: content}, yoast_head_json: seo} = data
+	const {title: {rendered: title}, content: {rendered: content}} = data
 
-	return {title, content, seo};
+	return {title, content};
 }
 
 export const getPostsInfo = async (slug: string) => {
-	const res = await fetch(`${apiURL}/posts?slug=${slug}`);
+	const res = await fetch(`${apiURL}/posts?slug=${slug}&_embed`);
 
 	if (!res.ok)
 		throw new Error('Failed to fetch post info')
@@ -54,9 +54,14 @@ export const getPostsInfo = async (slug: string) => {
 	const [data] = await res.json()
 	if (!data) throw new Error('Post not found');
 
-	const {title: {rendered: title}, content: {rendered: content}, yoast_head_json: seo} = data
+	const {title: {rendered: title}, date, content: {rendered: content}, excerpt: {rendered: excerpt}} = data
+	const featuredImage = data._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
+	const alt_text_image = data._embedded?.['wp:featuredmedia']?.[0]?.alt_text || '';
+	const authorName = data._embedded?.author?.[0]?.name || 'Unknown Author';
+	const authorAvatar = data._embedded?.author?.[0]?.avatar_urls?.['96'] || '';
+	const authorDescription = data._embedded?.author?.[0]?.description || '';
 
-	return {title, content, seo};
+	return {title, date, content, excerpt, featuredImage, alt_text_image, authorName, authorAvatar, authorDescription};
 }
 
 export const getIdCategoryByName = async (name: string) => {

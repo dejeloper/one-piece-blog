@@ -2,25 +2,33 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #f5f0e1;
-  --foreground: #2c2c2c;
-  --card: #ffffff;
-  --card-foreground: #2c2c2c;
-  --popover: #e8e1d4;
-  --popover-foreground: #2c2c2c;
-  --primary: #b7d6d8;
-  --primary-foreground: #2c2c2c;
-  --secondary: #d1c6b9;
-  --secondary-foreground: #2c2c2c;
-  --muted: #e8e1d4;
-  --muted-foreground: #6b6b6b;
-  --accent: #b7d6d8;
-  --accent-foreground: #2c2c2c;
-  --destructive: #ff6b6b;
-  --destructive-foreground: #ffffff;
-  --border: #d1c6b9;
-  --input: #ffffff;
-  --ring: rgba(183, 214, 216, 0.5);
+  --background: #f3e8e5; /* Rojizo muy claro, base elegante */
+  --foreground: #3a1f1a; /* Marrón rojizo profundo (no negro) */
+
+  --card: #faefec; /* Marfil rosado */
+  --card-foreground: #3a1f1a;
+
+  --popover: #edd2cd; /* Rosa terracota suave */
+  --popover-foreground: #3a1f1a;
+
+  --primary: #b64232; /* Rojo terracota intenso */
+  --primary-foreground: #fff;
+
+  --secondary: #8c3f2e; /* Marrón rojizo, cuero cálido */
+  --secondary-foreground: #fff;
+
+  --muted: #d6b0a7; /* Rosa apagado, soporte */
+  --muted-foreground: #5a2f28; /* Marrón rojizo apagado */
+
+  --accent: #e85c41; /* Rojo fuego, vibrante y aventurero */
+  --accent-foreground: #fff;
+
+  --destructive: #a3261c; /* Rojo vino fuerte */
+  --destructive-foreground: #fff;
+
+  --border: #c48a7d; /* Terracota suave */
+  --input: #faefec;
+  --ring: rgba(232, 92, 65, 0.4); /* Glow rojizo fuego */
 }
 
 body {

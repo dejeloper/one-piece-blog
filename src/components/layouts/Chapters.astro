@@ -26,43 +26,47 @@ const { chapters } = Astro.props;
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
         chapters && chapters.length > 0 ? (
-          chapters.map((chapter) => (
-            <div class="bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition">
-              {chapter.featuredImage && (
-                <img
-                  src={chapter.featuredImage}
-                  alt={chapter.title}
-                  class="w-full h-48 object-cover rounded mb-4"
-                  loading="lazy"
+          chapters.map((chapter) => {
+            const { title, excerpt, featuredImage, date, slug } = chapter;
+
+            return (
+              <div class="bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                {featuredImage && (
+                  <img
+                    src={featuredImage}
+                    alt={title}
+                    class="w-full h-48 object-cover rounded mb-4"
+                    loading="lazy"
+                  />
+                )}
+
+                <h3 class="font-semibold text-lg mb-2 text-center md:text-left">
+                  {title}
+                </h3>
+                <p
+                  class="text-[var(--muted-foreground)] mb-2 text-center md:text-left"
+                  set:html={excerpt}
                 />
-              )}
 
-              <h3 class="font-semibold text-lg mb-2 text-center md:text-left">
-                {chapter.title}
-              </h3>
-              <p
-                class="text-[var(--muted-foreground)] mb-2 text-center md:text-left"
-                set:html={chapter.excerpt}
-              />
-
-              {chapter.date && (
-                <p class="text-xs text-[var(--muted-foreground)] mb-4 text-right mt-6">
-                  Publicado:{" "}
-                  {new Date(chapter.date).toLocaleDateString("es-ES", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  })}
-                </p>
-              )}
-              <a
-                href={chapter.slug}
-                class="block text-center border border-[var(--border)] rounded-lg py-2 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition"
-              >
-                Leer más
-              </a>
-            </div>
-          ))
+                {date && (
+                  <p class="text-xs text-[var(--muted-foreground)] mb-4 text-right mt-6">
+                    Publicado:{" "}
+                    {new Date(date).toLocaleDateString("es-ES", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
+                  </p>
+                )}
+                <a
+                  href={`/blog/${slug}`}
+                  class="block text-center border border-[var(--border)] rounded-lg py-2 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition"
+                >
+                  Leer
+                </a>
+              </div>
+            );
+          })
         ) : (
           <p class="text-center col-span-3">No hay capítulos disponibles.</p>
         )

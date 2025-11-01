@@ -16,6 +16,17 @@ interface PostsCards {
 	};
 }
 
+interface Chapter {
+	id: number;
+	title: string;
+	excerpt: string;
+	content: string;
+	date: string;
+	slug: string;
+	featuredImage: string;
+	chapterNumber: number;
+}
+
 export const getAllPostsSlugs = async () => {
 	const res = await fetch(`${apiURL}/posts?per_page=100`)
 
@@ -76,6 +87,11 @@ export const getIdCategoryByName = async (name: string) => {
 	return data.id;
 };
 
+const extractChapterNumber = (slug: string): number => {
+	const match = slug.match(/cap(?:itulo)?-(\d+)/i);
+	return match ? parseInt(match[1], 10) : 0;
+};
+
 export const getLatestPosts = async ({category, perPage = 10}: {category: string, perPage?: number}) => {
 	const token = await getToken();
 
@@ -96,7 +112,7 @@ export const getLatestPosts = async ({category, perPage = 10}: {category: string
 	if (!resultados || resultados.length === 0)
 		throw new Error('No posts found');
 
-	const posts = resultados.map((post: any) => {
+	const posts: Chapter[] = resultados.map((post: any) => {
 		const {
 			id,
 			title: {rendered: title},
@@ -109,6 +125,8 @@ export const getLatestPosts = async ({category, perPage = 10}: {category: string
 		const featuredImage =
 			post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
 
+		const chapterNumber = extractChapterNumber(slug);
+
 		return {
 			id,
 			title,
@@ -117,10 +135,65 @@ export const getLatestPosts = async ({category, perPage = 10}: {category: string
 			date,
 			slug,
 			featuredImage,
+			chapterNumber,
 		};
 	});
 
+	posts.sort((a: Chapter, b: Chapter) => a.chapterNumber - b.chapterNumber);
+
 	return posts;
+};
+
+export const getAllChaptersOrdered = async (category: string) => {
+	const token = await getToken();
+
+	const categoryId = await getIdCategoryByName(category);
+
+	if (!categoryId) throw new Error('Invalid category');
+
+	const res = await fetch(`${apiURL}/posts?per_page=100&categories=${categoryId}&_embed`, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+	if (!res.ok) throw new Error('Failed to fetch chapters');
+
+	const resultados = await res.json();
+
+	if (!resultados || resultados.length === 0)
+		throw new Error('No chapters found');
+
+	const chapters: Chapter[] = resultados.map((post: any) => {
+		const {
+			id,
+			title: {rendered: title},
+			excerpt: {rendered: excerpt},
+			content: {rendered: content},
+			date,
+			slug,
+		} = post;
+
+		const featuredImage =
+			post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
+
+		const chapterNumber = extractChapterNumber(slug);
+
+		return {
+			id,
+			title,
+			excerpt,
+			content,
+			date,
+			slug,
+			featuredImage,
+			chapterNumber,
+		};
+	});
+
+	chapters.sort((a: Chapter, b: Chapter) => a.chapterNumber - b.chapterNumber);
+
+	return chapters;
 };
 
 export const getCuriosities = async () => {

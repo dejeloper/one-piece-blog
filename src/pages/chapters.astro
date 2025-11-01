@@ -1,0 +1,14 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getAllChaptersOrdered } from "../lib/wp";
+import ChapterIndex from "../components/layouts/ChapterIndex.astro";
+
+const chapters = await getAllChaptersOrdered("historia");
+---
+
+<Layout
+  title="Lista de Capítulos - Mi Propio One Piece"
+  description="Lista completa de todos los capítulos de mi aventura en búsqueda de la libertad."
+>
+  <ChapterIndex chapters={chapters} title="Lista de Capítulos" />
+</Layout>

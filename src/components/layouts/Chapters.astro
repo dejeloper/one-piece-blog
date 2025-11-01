@@ -1,11 +1,13 @@
 ---
 interface Chapter {
-  id: string;
+  id: number;
   title: string;
   excerpt: string;
-  featuredImage?: string;
+  content: string;
+  featuredImage: string;
   date: string;
   slug: string;
+  chapterNumber: number;
 }
 
 interface Props {
@@ -13,6 +15,15 @@ interface Props {
 }
 
 const { chapters } = Astro.props;
+
+const formatChapterNumber = (num: number): string => {
+  return num > 0 ? `Capítulo ${num}` : "";
+};
+
+const extractChapterNumber = (slug: string): number => {
+  const match = slug.match(/cap(?:itulo)?-(\d+)/i);
+  return match ? parseInt(match[1], 10) : 0;
+};
 ---
 
 <section
@@ -26,51 +37,103 @@ const { chapters } = Astro.props;
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
         chapters && chapters.length > 0 ? (
-          chapters.map((chapter) => {
-            const { title, excerpt, featuredImage, date, slug } = chapter;
+          chapters
+            .slice()
+            .sort((a: Chapter, b: Chapter) => {
+              const aNumber = a.chapterNumber || extractChapterNumber(a.slug);
+              const bNumber = b.chapterNumber || extractChapterNumber(b.slug);
+              return bNumber - aNumber;
+            })
+            .slice(0, 3)
+            .map((chapter: Chapter) => {
+              const {
+                title,
+                excerpt,
+                featuredImage,
+                date,
+                slug,
+                chapterNumber,
+              } = chapter;
 
-            return (
-              <div class="bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition">
-                {featuredImage && (
-                  <img
-                    src={featuredImage}
-                    alt={title}
-                    class="w-full h-48 object-cover rounded mb-4"
-                    loading="lazy"
-                  />
-                )}
+              const displayChapterNumber =
+                chapterNumber || extractChapterNumber(slug);
+              const chapterLabel = formatChapterNumber(displayChapterNumber);
 
-                <h3 class="font-semibold text-lg mb-2 text-center md:text-left">
-                  {title}
-                </h3>
-                <p
-                  class="text-[var(--muted-foreground)] mb-2 text-center md:text-left"
-                  set:html={excerpt}
-                />
+              return (
+                <div class="bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition flex flex-col h-full">
+                  {featuredImage && (
+                    <img
+                      src={featuredImage}
+                      alt={title}
+                      class="w-full h-48 object-cover rounded mb-4"
+                      loading="lazy"
+                    />
+                  )}
 
-                {date && (
-                  <p class="text-xs text-[var(--muted-foreground)] mb-4 text-right mt-6">
-                    Publicado:{" "}
-                    {new Date(date).toLocaleDateString("es-ES", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
-                  </p>
-                )}
-                <a
-                  href={`/blog/${slug}`}
-                  class="block text-center border border-[var(--border)] rounded-lg py-2 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition"
-                >
-                  Leer
-                </a>
-              </div>
-            );
-          })
+                  {chapterLabel && (
+                    <div class="mb-3">
+                      <span class="bg-[var(--primary)] text-[var(--primary-foreground)] px-2 py-1 rounded-full text-xs font-semibold">
+                        {chapterLabel}
+                      </span>
+                    </div>
+                  )}
+
+                  <h3 class="font-semibold text-lg mb-2 text-center md:text-left">
+                    {title}
+                  </h3>
+
+                  <div class="flex-grow">
+                    <p
+                      class="text-[var(--muted-foreground)] mb-2 text-center md:text-left"
+                      set:html={excerpt}
+                    />
+                  </div>
+
+                  {date && (
+                    <p class="text-xs text-[var(--muted-foreground)] mb-4 text-right mt-6">
+                      Publicado:{" "}
+                      {new Date(date).toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })}
+                    </p>
+                  )}
+
+                  <a
+                    href={`/blog/${slug}`}
+                    class="block text-center border border-[var(--border)] rounded-lg py-2 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition"
+                  >
+                    Leer
+                  </a>
+                </div>
+              );
+            })
         ) : (
           <p class="text-center col-span-3">No hay capítulos disponibles.</p>
         )
       }
+    </div>
+
+    <div class="text-center mt-12">
+      <a
+        href="/chapters"
+        class="inline-flex items-center gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-3 rounded-lg font-semibold transition-all hover:bg-[var(--primary)]/90 hover:scale-105"
+      >
+        Ver todos los capítulos
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
     </div>
   </div>
 </section>

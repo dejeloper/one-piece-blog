@@ -1,0 +1,137 @@
+---
+interface Chapter {
+  id: number;
+  title: string;
+  excerpt: string;
+  featuredImage?: string;
+  date: string;
+  slug: string;
+  chapterNumber: number;
+}
+
+interface Props {
+  chapters?: Chapter[];
+  title?: string;
+}
+
+const { chapters, title = "Lista de Capítulos" } = Astro.props;
+
+const formatChapterNumber = (num: number): string => {
+  return num > 0 ? `Capítulo ${num}` : "Prólogo";
+};
+---
+
+<section id="chapter-index" class="py-20 px-4 bg-[var(--background)]">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+      {title}
+    </h2>
+
+    {
+      chapters && chapters.length > 0 ? (
+        <div class="space-y-4">
+          {chapters.map((chapter: Chapter, index: number) => {
+            const {
+              title: chapterTitle,
+              excerpt,
+              date,
+              slug,
+              chapterNumber,
+            } = chapter;
+
+            return (
+              <div class="bg-[var(--card)] border border-[var(--border)] rounded-lg p-6 hover:shadow-lg transition-all duration-300 hover:border-[var(--primary)]/50">
+                <div class="flex flex-col md:flex-row gap-6">
+                  <div class="flex-1">
+                    <div class="mb-3">
+                      <span class="bg-[var(--primary)] text-[var(--primary-foreground)] px-3 py-1 rounded-full text-sm font-semibold">
+                        {formatChapterNumber(chapterNumber)}
+                      </span>
+                    </div>
+
+                    <p class="text-xs text-[var(--muted-foreground)] mb-3">
+                      Publicado:{" "}
+                      {new Date(date).toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })}
+                    </p>
+
+                    <h3 class="font-semibold text-xl mb-3 hover:text-[var(--primary)] transition-colors">
+                      <a href={`/blog/${slug}`} class="no-underline">
+                        {chapterTitle}
+                      </a>
+                    </h3>
+
+                    <p
+                      class="text-[var(--muted-foreground)] text-sm line-clamp-3"
+                      set:html={excerpt}
+                    />
+                  </div>
+
+                  <div class="flex-shrink-0 w-full md:w-48 flex flex-col items-center">
+                    {chapter.featuredImage && (
+                      <img
+                        src={chapter.featuredImage}
+                        alt={chapterTitle}
+                        class="w-full h-32 md:h-28 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-3"
+                        loading="lazy"
+                      />
+                    )}
+
+                    <a
+                      href={`/blog/${slug}`}
+                      class="w-full text-center bg-[var(--primary)] text-[var(--primary-foreground)] px-4 py-3 rounded-lg font-semibold text-sm transition-all hover:bg-[var(--primary)]/90 hover:scale-105 transform active:scale-95 inline-flex items-center justify-center gap-2"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        />
+                      </svg>
+                      Leer capítulo
+                    </a>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <div class="text-6xl mb-4">📚</div>
+          <h3 class="text-xl font-semibold mb-2">
+            No hay capítulos disponibles
+          </h3>
+          <p class="text-[var(--muted-foreground)]">
+            Los capítulos aparecerán aquí cuando estén publicados.
+          </p>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -1,7 +1,7 @@
 ---
 const navLinks = [
-  { href: "/#home", label: "Inicio" },
-  { href: "/#chapters", label: "Capítulos" },
+  { href: "/", label: "Inicio" },
+  { href: "/chapters", label: "Todos los capítulos" },
   // { href: "#curiosities", label: "Curiosidades" },
   { href: "/#author", label: "Sobre el autor" },
   // { href: "#contact", label: "Contacto" },
@@ -29,7 +29,7 @@ const { name, icon } = Astro.props;
           <li>
             <a
               href={link.href}
-              class="px-3 py-2 rounded-md hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition"
+              class="px-3 py-2 rounded-md hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition active:scale-95"
             >
               {link.label}
             </a>
@@ -67,7 +67,7 @@ const { name, icon } = Astro.props;
           <li>
             <a
               href={link.href}
-              class="block px-3 py-2 rounded-md hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition"
+              class="block px-3 py-2 rounded-md hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition active:scale-95"
             >
               {link.label}
             </a>

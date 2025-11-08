@@ -10,7 +10,7 @@ interface Props {
 const {
   title = "Mi propio One Piece",
   subtitle = "El camino de la busqueda de la libertad a traves de One Piece.",
-  ctaText = "Leer capítulos",
+  ctaText = "Últimos capítulos",
   ctaLink = "#chapters",
   image = "/images/preview.webp",
 } = Astro.props;
@@ -28,7 +28,7 @@ const {
       </p>
       <a
         href={ctaLink}
-        class="inline-block bg-[var(--primary)] text-[var(--primary-foreground)] px-8 py-3 rounded-lg font-semibold text-lg transition-transform hover:scale-105"
+        class="inline-block bg-[var(--primary)]/90 text-[var(--primary-foreground)] px-8 py-3 rounded-lg font-semibold text-lg transition-transform active:scale-95 hover:bg-[var(--primary)]"
       >
         {ctaText}
       </a>

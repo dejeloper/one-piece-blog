@@ -65,7 +65,8 @@ export const getPostsInfo = async (slug: string) => {
 	const [data] = await res.json()
 	if (!data) throw new Error('Post not found');
 
-	const {title: {rendered: title}, date, content: {rendered: content}, excerpt: {rendered: excerpt}} = data
+	const {title: {rendered: title}, date, content: {rendered: content}, excerpt: {rendered: excerptRaw}} = data;
+	const excerpt = excerptRaw.replace(/<[^>]*>/g, '').trim();
 	const featuredImage = data._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
 	const alt_text_image = data._embedded?.['wp:featuredmedia']?.[0]?.alt_text || '';
 	const authorName = data._embedded?.author?.[0]?.name || 'Unknown Author';
@@ -116,11 +117,13 @@ export const getLatestPosts = async ({category, perPage = 10}: {category: string
 		const {
 			id,
 			title: {rendered: title},
-			excerpt: {rendered: excerpt},
+			excerpt: {rendered: excerptRaw},
 			content: {rendered: content},
 			date,
 			slug,
 		} = post;
+
+		const excerpt = excerptRaw.replace(/<[^>]*>/g, '').trim();
 
 		const featuredImage =
 			post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
@@ -168,11 +171,13 @@ export const getAllChaptersOrdered = async (category: string) => {
 		const {
 			id,
 			title: {rendered: title},
-			excerpt: {rendered: excerpt},
+			excerpt: {rendered: excerptRaw},
 			content: {rendered: content},
 			date,
 			slug,
 		} = post;
+
+		const excerpt = excerptRaw.replace(/<[^>]*>/g, '').trim();
 
 		const featuredImage =
 			post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';

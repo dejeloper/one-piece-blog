@@ -54,14 +54,15 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
             <picture>
               <img
                 src={featuredImage}
-                alt={title}
+                alt={alt_text_image}
+                title={alt_text_image}
                 class="w-full h-auto object-cover rounded-xl shadow-md"
                 loading="lazy"
               />
             </picture>
-            {alt_text_image && (
+            {excerpt && (
               <figcaption class="mt-2 text-xs text-gray-500 italic">
-                {alt_text_image}
+                {excerpt}
               </figcaption>
             )}
           </figure>

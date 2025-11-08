@@ -32,7 +32,7 @@ const extractChapterNumber = (slug: string): number => {
 >
   <div class="max-w-6xl mx-auto">
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
-      Explora los capítulos
+      Explora los últimos capítulos
     </h2>
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
@@ -62,12 +62,16 @@ const extractChapterNumber = (slug: string): number => {
               return (
                 <div class="bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition flex flex-col h-full">
                   {featuredImage && (
-                    <img
-                      src={featuredImage}
-                      alt={title}
-                      class="w-full h-48 object-cover rounded mb-4"
-                      loading="lazy"
-                    />
+                    <a href={`/blog/${slug}`}>
+                      <picture>
+                        <img
+                          src={featuredImage}
+                          alt={title}
+                          class="w-full h-48 object-cover rounded mb-4"
+                          loading="lazy"
+                        />
+                      </picture>
+                    </a>
                   )}
 
                   {chapterLabel && (
@@ -78,8 +82,8 @@ const extractChapterNumber = (slug: string): number => {
                     </div>
                   )}
 
-                  <h3 class="font-semibold text-lg mb-2 text-center md:text-left">
-                    {title}
+                  <h3 class="font-semibold text-lg mb-2 text-center md:text-left no-underline hover:underline transition active:scale-95">
+                    <a href={`/blog/${slug}`}>{title}</a>
                   </h3>
 
                   <div class="flex-grow">
@@ -102,7 +106,7 @@ const extractChapterNumber = (slug: string): number => {
 
                   <a
                     href={`/blog/${slug}`}
-                    class="block text-center border border-[var(--border)] rounded-lg py-2 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition"
+                    class="block text-center border border-[var(--border)] rounded-lg py-2 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition active:scale-95"
                   >
                     Leer
                   </a>
@@ -118,7 +122,7 @@ const extractChapterNumber = (slug: string): number => {
     <div class="text-center mt-12">
       <a
         href="/chapters"
-        class="inline-flex items-center gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-3 rounded-lg font-semibold transition-all hover:bg-[var(--primary)]/90 hover:scale-105"
+        class="inline-flex items-center gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-3 rounded-lg font-semibold transition-all hover:bg-[var(--primary)]/90 active:scale-95"
       >
         Ver todos los capítulos
         <svg

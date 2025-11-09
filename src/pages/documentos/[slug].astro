@@ -1,0 +1,157 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getAllPostsSlugs, getPostsInfo } from "../../lib/wp";
+
+const slug = Astro.params.slug;
+if (!slug) {
+  throw new Error("Slug is required");
+}
+
+const {
+  title,
+  date,
+  content,
+  excerpt,
+  featuredImage,
+  alt_text_image,
+  authorName,
+  authorAvatar,
+  authorDescription,
+} = await getPostsInfo(slug);
+
+export async function getStaticPaths() {
+  const slugs: string[] = await getAllPostsSlugs();
+  return slugs.map((slug: string) => ({ params: { slug } }));
+}
+
+const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+---
+
+<Layout
+  title={`${title} - Documentos`}
+  description={excerpt ||
+    "Documento del blog Mi Propio One Piece. Recursos y material de referencia."}
+>
+  <main class="pt-8 pb-16 lg:pt-16 lg:pb-24 antialiased bg-[var(--background)]">
+    <article class="prose prose-lg mx-auto max-w-3xl px-4">
+      <!-- Etiqueta de documento -->
+      <div class="flex justify-center mb-6">
+        <span
+          class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20"
+        >
+          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+              clip-rule="evenodd"></path>
+          </svg>
+          Documento
+        </span>
+      </div>
+
+      <!-- Título dinámico -->
+      <h1
+        class="text-4xl font-extrabold tracking-tight mb-6 text-center text-[var(--foreground)] leading-tight"
+      >
+        {title}
+      </h1>
+
+      <!-- Imagen destacada dinámica -->
+      {
+        featuredImage && (
+          <figure class="my-8">
+            <picture>
+              <img
+                src={featuredImage}
+                alt={alt_text_image}
+                title={alt_text_image}
+                class="w-full h-auto object-cover rounded-xl shadow-md border border-[var(--border)]"
+                loading="lazy"
+              />
+            </picture>
+            {excerpt && (
+              <figcaption class="mt-2 text-xs text-[var(--muted-foreground)] italic text-center">
+                {excerpt}
+              </figcaption>
+            )}
+          </figure>
+        )
+      }
+
+      <!-- Contenido dinámico desde WordPress -->
+      <div
+        class="prose prose-lg mx-auto max-w-3xl leading-relaxed text-[var(--foreground)]"
+        set:html={content}
+      />
+
+      <!-- Fecha de publicación -->
+      <p
+        class="text-sm text-[var(--muted-foreground)] mt-12 justify-end text-right"
+      >
+        Publicado el <span class="font-semibold text-[var(--foreground)]"
+          >{dateFormatted}</span
+        >
+      </p>
+
+      <!-- Caja del autor -->
+      <footer class="max-w-3xl sm:w-full mx-auto my-0 p-0 justify-center">
+        <div
+          class="w-full flex items-center justify-between gap-2 px-6 border border-[var(--border)] shadow-md rounded-xl bg-[var(--card)] my-0"
+        >
+          <!-- Avatar -->
+          <div
+            class="flex-shrink-0 justify-end border-r border-[var(--border)] pr-6"
+          >
+            <img
+              class="object-cover w-24 h-24 rounded-full ring-2 ring-[var(--ring)] shadow-md"
+              src={authorAvatar}
+              alt={authorName}
+              loading="lazy"
+            />
+          </div>
+
+          <!-- Info -->
+          <div
+            class="w-full flex flex-col justify-start items-start ml-4 mr-0 p-0 my-auto"
+          >
+            <h3 class="text-lg font-semibold text-[var(--card-foreground)]">
+              {authorName}
+            </h3>
+            <p class="text-sm text-[var(--muted-foreground)]">
+              {authorDescription}
+            </p>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Botón para regresar a documentos -->
+      <div class="text-center mt-12">
+        <a
+          href="/documentos"
+          class="inline-block bg-[var(--primary)]/90 text-[var(--primary-foreground)] px-6 py-3 rounded-lg font-semibold text-base transition-transform active:scale-95 hover:bg-[var(--primary)]"
+        >
+          <svg
+            class="w-5 h-5 mr-2 inline"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 17l-5-5m0 0l5-5m-5 5h12"></path>
+          </svg>
+          Volver a documentos
+        </a>
+      </div>
+    </article>
+  </main>
+</Layout>

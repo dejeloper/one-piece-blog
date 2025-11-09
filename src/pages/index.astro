@@ -9,6 +9,7 @@ import {
 import Hero from "@components/layouts/Hero.astro";
 import Author from "@components/layouts/Author.astro";
 import Chapters from "@components/layouts/Chapters.astro";
+import Documents from "@components/layouts/Documents.astro";
 import Contact from "@components/layouts/Contact.astro";
 import Curiosities from "@components/layouts/Curiosities.astro";
 import Newsletter from "@components/layouts/Newsletter.astro";
@@ -35,6 +36,9 @@ const reviews = await getReviews({ perPage: 3 });
       <div class="sr-only">No hay capítulos disponibles.</div>
     )
   }
+
+  <!-- Documentos -->
+  <Documents />
 
   <!-- Curiosidades -->
   {

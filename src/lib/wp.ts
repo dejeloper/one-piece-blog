@@ -77,15 +77,19 @@ export const getPostsInfo = async (slug: string) => {
 }
 
 export const getIdCategoryByName = async (name: string) => {
-	const res = await fetch(`${apiURL}/categories?search=${name}`);
+	try {
+		const res = await fetch(`${apiURL}/categories?search=${name}`);
 
-	if (!res.ok)
-		throw new Error('Failed to fetch category ID');
+		if (!res.ok) return null;
 
-	const [data] = await res.json();
-	if (!data) throw new Error('Category not found');
+		const data = await res.json();
+		if (!data || data.length === 0) return null;
 
-	return data.id;
+		return data[0].id;
+	} catch (error) {
+		console.warn(`Error fetching category "${name}":`, error);
+		return null;
+	}
 };
 
 const extractChapterNumber = (slug: string): number => {
@@ -257,6 +261,60 @@ export const getReviews = async ({perPage = 3}) => {
 	return [];// reviews.slice(0, perPage);
 
 }
+
+export const getDocuments = async ({perPage = 10}: {perPage?: number} = {}) => {
+	try {
+		const token = await getToken();
+
+		const categoryId = await getIdCategoryByName('Documentos');
+
+		if (!categoryId) return [];
+
+		const res = await fetch(`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+
+		if (!res.ok) return [];
+
+		const resultados = await res.json();
+
+		if (!resultados || resultados.length === 0) return [];
+
+		const documents = resultados.map((post: any) => {
+			const {
+				id,
+				title: {rendered: title},
+				excerpt: {rendered: excerptRaw},
+				content: {rendered: content},
+				date,
+				slug,
+			} = post;
+
+			const excerpt = excerptRaw.replace(/<[^>]*>/g, '').trim();
+
+			const featuredImage =
+				post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
+
+			return {
+				id,
+				title,
+				excerpt,
+				content,
+				date,
+				slug,
+				featuredImage,
+			};
+		});
+
+		return documents;
+	} catch (error) {
+		// En caso de cualquier error, devolver array vacío para no romper la aplicación
+		console.warn('Error fetching documents:', error);
+		return [];
+	}
+};
 
 const getToken = async (): Promise<string> => {
 	const res = await fetch(jwtURL, {

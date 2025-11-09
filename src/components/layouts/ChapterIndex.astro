@@ -117,6 +117,28 @@ const formatChapterNumber = (num: number): string => {
         </div>
       )
     }
+
+    <!-- Botón para regresar al inicio -->
+    <div class="text-center mt-12">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-3 rounded-lg font-semibold transition-all hover:bg-[var(--primary)]/90 active:scale-95"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Volver al inicio
+      </a>
+    </div>
   </div>
 </section>
 

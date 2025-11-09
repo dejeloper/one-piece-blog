@@ -16,35 +16,93 @@ const {
   ],
   image = "https://www.dejeloper.com/images/me_02.webp",
 } = Astro.props;
+
+// Contactos minimalistas
+const contacts = [
+  { label: "Web principal", url: "https://dejeloper.com", icon: "web" },
+  {
+    label: "Blog de cuentos",
+    url: "https://cuentos.dejeloper.com",
+    icon: "book",
+  },
+  { label: "GitHub", url: "https://github.com/dejeloper", icon: "github" },
+  {
+    label: "LinkedIn",
+    url: "https://linkedin.com/in/dejeloper",
+    icon: "linkedin",
+  },
+  { label: "Email", url: "mailto:jhonatanguerrero@outlook.com", icon: "mail" },
+];
+
+const icons: Record<string, string> = {
+  linkedin: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M1 2.838A1.84 1.84 0 0 1 2.838 1H21.16A1.837 1.837 0 0 1 23 2.838V21.16A1.84 1.84 0 0 1 21.161 23H2.838A1.84 1.84 0 0 1 1 21.161zm8.708 6.55h2.979v1.496c.43-.86 1.53-1.634 3.183-1.634c3.169 0 3.92 1.713 3.92 4.856v5.822h-3.207v-5.106c0-1.79-.43-2.8-1.522-2.8c-1.515 0-2.145 1.089-2.145 2.8v5.106H9.708zm-5.5 10.403h3.208V9.25H4.208zM7.875 5.812a2.063 2.063 0 1 1-4.125 0a2.063 2.063 0 0 1 4.125 0" clip-rule="evenodd"/></svg>`,
+  github: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385c.6.105.825-.255.825-.57c0-.285-.015-1.23-.015-2.235c-3.015.555-3.795-.735-4.035-1.41c-.135-.345-.72-1.41-1.23-1.695c-.42-.225-1.02-.78-.015-.795c.945-.015 1.62.87 1.845 1.23c1.08 1.815 2.805 1.305 3.495.99c.105-.78.42-1.305.765-1.605c-2.67-.3-5.46-1.335-5.46-5.925c0-1.305.465-2.385 1.23-3.225c-.12-.3-.54-1.53.12-3.18c0 0 1.005-.315 3.3 1.23c.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23c.66 1.65.24 2.88.12 3.18c.765.84 1.23 1.905 1.23 3.225c0 4.605-2.805 5.625-5.475 5.925c.435.375.81 1.095.81 2.22c0 1.605-.015 2.895-.015 3.3c0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12"/></svg>`,
+  mail: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25v-8.5C0 2.784.784 2 1.75 2M1.5 12.251c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V5.809L8.38 9.397a.75.75 0 0 1-.76 0L1.5 5.809zm13-8.181v-.32a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25v.32L8 7.88Z"/></svg>`,
+  web: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12s4.477 10 10 10"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 2.05S16 6 16 12m-5 9.95S8 18 8 12s3-9.95 3-9.95M2.63 15.5H12m-9.37-7h18.74"/><path d="M21.879 17.917c.494.304.463 1.043-.045 1.101l-2.567.291l-1.151 2.312c-.228.459-.933.234-1.05-.334l-1.255-6.116c-.099-.48.333-.782.75-.525z" clip-rule="evenodd"/></g></svg>`,
+  book: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+};
 ---
 
 <section
   id="author"
-  class="py-20 px-4 bg-[var(--secondary)]/30 animate-fade-in"
+  class="py-20 px-4 bg-gradient-to-b to-[var(--primary)]/50 from-[var(--background)] animate-fade-in"
 >
-  <div
-    class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center text-center md:text-left"
-  >
-    <div>
-      <h2 class="text-3xl md:text-4xl font-bold mb-6">Sobre el autor</h2>
-      <h3 class="text-xl font-semibold mb-4">{name}</h3>
-      <p class="text-[var(--muted-foreground)] mb-4">{title}</p>
-      {
-        description.map((text) => (
-          <p class="text-[var(--muted-foreground)] mb-4" set:html={text} />
-        ))
-      }
+  <div class="max-w-5xl mx-auto">
+    <!-- Título centrado -->
+    <div class="text-center mb-12">
+      <h2 class="text-2xl md:text-3xl font-bold mb-2">Sobre el autor</h2>
     </div>
-    <div>
-      <picture>
-        <source srcset={image} type="image/webp" />
-        <img
-          src={image}
-          alt={`Retrato de ${name}`}
-          loading="lazy"
-          class="rounded-lg shadow-lg mx-auto max-h-[400px] object-cover"
+
+    <!-- Layout de dos columnas -->
+    <div class="grid md:grid-cols-2 gap-12 items-start">
+      <!-- Columna izquierda: Información del autor -->
+      <div class="space-y-4">
+        <!-- Nombre y título -->
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold">{name}</h3>
+          <p class="text-[var(--muted-foreground)] text-sm">{title}</p>
+        </div>
+
+        <!-- Descripción -->
+        <p
+          class="text-[var(--muted-foreground)] leading-relaxed"
+          set:html={description[0]}
         />
-      </picture>
+      </div>
+
+      <!-- Columna derecha: Foto y Links -->
+      <div class="space-y-6">
+        <!-- Foto centrada arriba -->
+        <div class="text-center">
+          <picture>
+            <source srcset={image} type="image/webp" />
+            <img
+              src={image}
+              alt={`Retrato de ${name}`}
+              loading="lazy"
+              class="rounded-full shadow-sm w-24 h-24 object-cover mx-auto"
+            />
+          </picture>
+        </div>
+
+        <!-- Enlaces -->
+        <div class="flex justify-center items-center gap-3">
+          {
+            contacts.map((contact) => (
+              <a
+                href={contact.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={contact.label}
+                title={contact.label}
+                class="w-10 h-10 flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors rounded-lg hover:bg-[var(--background)]/50"
+              >
+                <span class="w-5 h-5" set:html={icons[contact.icon]} />
+              </a>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </div>
 </section>

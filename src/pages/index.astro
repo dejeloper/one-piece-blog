@@ -10,7 +10,6 @@ import Hero from "@components/layouts/Hero.astro";
 import Author from "@components/layouts/Author.astro";
 import Chapters from "@components/layouts/Chapters.astro";
 import Documents from "@components/layouts/Documents.astro";
-import Contact from "@components/layouts/Contact.astro";
 import Curiosities from "@components/layouts/Curiosities.astro";
 import Newsletter from "@components/layouts/Newsletter.astro";
 import Reviews from "@components/layouts/Reviews.astro";
@@ -61,9 +60,6 @@ const reviews = await getReviews({ perPage: 3 });
   <!-- Newsletter -->
   <!-- <Newsletter /> -->
 
-  <!-- Sobre la autora -->
+  <!-- Sobre el autor y contacto -->
   <Author />
-
-  <!-- Contacto -->
-  <Contact />
 </Layout>

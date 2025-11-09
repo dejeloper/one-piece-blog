@@ -45,7 +45,7 @@ const icons: Record<string, string> = {
 
 <section
   id="author"
-  class="py-20 px-4 bg-gradient-to-b to-[var(--primary)]/50 from-[var(--background)] animate-fade-in"
+  class="py-20 px-4 bg-[var(--secondary)]/30 animate-fade-in"
 >
   <div class="max-w-5xl mx-auto">
     <!-- Título centrado -->
@@ -56,7 +56,7 @@ const icons: Record<string, string> = {
     <!-- Layout de dos columnas -->
     <div class="grid md:grid-cols-2 gap-12 items-start">
       <!-- Columna izquierda: Información del autor -->
-      <div class="space-y-4">
+      <div class="space-y-4 text-center md:text-left">
         <!-- Nombre y título -->
         <div class="mb-4">
           <h3 class="text-lg font-semibold">{name}</h3>
@@ -92,10 +92,10 @@ const icons: Record<string, string> = {
               <a
                 href={contact.url}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 aria-label={contact.label}
                 title={contact.label}
-                class="w-10 h-10 flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors rounded-lg hover:bg-[var(--background)]/50"
+                class="w-10 h-10 flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-all active:scale-85 rounded-lg hover:bg-[var(--background)]/50 md:bg-transparent bg-[var(--background)]/70"
               >
                 <span class="w-5 h-5" set:html={icons[contact.icon]} />
               </a>

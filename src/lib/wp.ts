@@ -7,6 +7,21 @@ const jwtURL = `${domain}/wp-json/jwt-auth/v1/token`;
 // Cache para el token JWT
 let tokenCache: {token: string; expiry: number} | null = null;
 
+interface CacheEntry<T> {
+	data: T;
+	expiry: number;
+}
+
+const responseCache = new Map<string, CacheEntry<any>>();
+
+const CACHE_DURATIONS = {
+	posts: 5,
+	chapters: 10,
+	categories: 30,
+	pages: 15,
+	documents: 10
+} as const;
+
 interface PostsCards {
 	id: number;
 	title: {rendered: string};
@@ -81,13 +96,14 @@ export const getPostsInfo = async (slug: string) => {
 
 export const getIdCategoryByName = async (name: string) => {
 	try {
-		const res = await fetch(`${apiURL}/categories?search=${name}`);
+		const cacheKey = `category_${name}`;
+		const data = await fetchWithCache<any[]>(
+			`${apiURL}/categories?search=${name}`,
+			cacheKey,
+			'categories'
+		);
 
-		if (!res.ok) return null;
-
-		const data = await res.json();
 		if (!data || data.length === 0) return null;
-
 		return data[0].id;
 	} catch (error) {
 		console.warn(`Error fetching category "${name}":`, error);
@@ -105,11 +121,13 @@ export const getLatestPosts = async ({category, perPage = 10, requireAuth = fals
 
 	if (!categoryId) throw new Error('Invalid category');
 
-	const res = await fetchWithOptionalAuth(`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`, requireAuth);
-
-	if (!res.ok) throw new Error('Failed to fetch latest posts');
-
-	const resultados = await res.json();
+	const cacheKey = `posts_${category}_${perPage}_${requireAuth}`;
+	const resultados = await fetchWithCache<any[]>(
+		`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`,
+		cacheKey,
+		'posts',
+		requireAuth
+	);
 
 	if (!resultados || resultados.length === 0)
 		throw new Error('No posts found');
@@ -153,11 +171,13 @@ export const getAllChaptersOrdered = async (category: string, requireAuth: boole
 
 	if (!categoryId) throw new Error('Invalid category');
 
-	const res = await fetchWithOptionalAuth(`${apiURL}/posts?per_page=100&categories=${categoryId}&_embed`, requireAuth);
-
-	if (!res.ok) throw new Error('Failed to fetch chapters');
-
-	const resultados = await res.json();
+	const cacheKey = `chapters_${category}_${requireAuth}`;
+	const resultados = await fetchWithCache<any[]>(
+		`${apiURL}/posts?per_page=100&categories=${categoryId}&_embed`,
+		cacheKey,
+		'chapters',
+		requireAuth
+	);
 
 	if (!resultados || resultados.length === 0)
 		throw new Error('No chapters found');
@@ -259,11 +279,13 @@ export const getDocuments = async ({perPage = 10, requireAuth = false}: {perPage
 
 		if (!categoryId) return [];
 
-		const res = await fetchWithOptionalAuth(`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`, requireAuth);
-
-		if (!res.ok) return [];
-
-		const resultados = await res.json();
+		const cacheKey = `documents_${perPage}_${requireAuth}`;
+		const resultados = await fetchWithCache<any[]>(
+			`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`,
+			cacheKey,
+			'documents',
+			requireAuth
+		);
 
 		if (!resultados || resultados.length === 0) return [];
 
@@ -338,4 +360,42 @@ const fetchWithOptionalAuth = async (url: string, requireAuth: boolean = false) 
 	}
 
 	return fetch(url, {headers});
+};
+
+const fetchWithCache = async <T>(
+	url: string,
+	cacheKey: string,
+	cacheType: keyof typeof CACHE_DURATIONS,
+	requireAuth: boolean = false
+): Promise<T> => {
+	const cached = responseCache.get(cacheKey);
+	if (cached && Date.now() < cached.expiry) {
+		return cached.data;
+	}
+
+	const res = await fetchWithOptionalAuth(url, requireAuth);
+	if (!res.ok) throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
+
+	const data = await res.json();
+
+	const cacheDuration = CACHE_DURATIONS[cacheType] * 60 * 1000;
+	responseCache.set(cacheKey, {
+		data,
+		expiry: Date.now() + cacheDuration
+	});
+
+	return data;
+};
+
+export const clearCache = (pattern?: string) => {
+	if (!pattern) {
+		responseCache.clear();
+		return;
+	}
+
+	for (const [key] of responseCache) {
+		if (key.includes(pattern)) {
+			responseCache.delete(key);
+		}
+	}
 }; 

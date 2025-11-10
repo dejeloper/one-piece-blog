@@ -43,7 +43,10 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
   <main class="pt-8 pb-16 lg:pt-16 lg:pb-24 antialiased">
     <article class="prose prose-lg mx-auto max-w-3xl px-4">
       <!-- Título dinámico -->
-      <h1 class="text-4xl font-extrabold tracking-tight mb-6 text-center">
+      <h1
+        class="text-4xl font-extrabold tracking-tight mb-6 text-center"
+        transition:name={`chapter-title-${slug}`}
+      >
         {title}
       </h1>
 
@@ -58,6 +61,7 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
                 title={alt_text_image}
                 class="w-full h-auto object-cover rounded-xl shadow-md"
                 loading="lazy"
+                transition:name={`chapter-image-${slug}`}
               />
             </picture>
             {excerpt && (

@@ -69,6 +69,7 @@ const extractChapterNumber = (slug: string): number => {
                           alt={title}
                           class="w-full h-48 object-cover rounded mb-4"
                           loading="lazy"
+                          transition:name={`chapter-image-${slug}`}
                         />
                       </picture>
                     </a>
@@ -82,7 +83,10 @@ const extractChapterNumber = (slug: string): number => {
                     </div>
                   )}
 
-                  <h3 class="font-semibold text-lg mb-2 text-center md:text-left no-underline hover:underline transition active:scale-95">
+                  <h3
+                    class="font-semibold text-lg mb-2 text-center md:text-left no-underline hover:underline transition active:scale-95"
+                    transition:name={`chapter-title-${slug}`}
+                  >
                     <a href={`/blog/${slug}`}>{title}</a>
                   </h3>
 

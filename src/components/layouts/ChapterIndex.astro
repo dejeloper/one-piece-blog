@@ -58,10 +58,7 @@ const formatChapterNumber = (num: number): string => {
                       })}
                     </p>
 
-                    <h3
-                      class="font-semibold text-xl mb-3 hover:text-[var(--primary)] transition-colors"
-                      transition:name={`chapter-title-${slug}`}
-                    >
+                    <h3 class="font-semibold text-xl mb-3 hover:text-[var(--primary)] transition-colors">
                       <a
                         href={`/blog/${slug}`}
                         data-astro-prefetch
@@ -84,7 +81,6 @@ const formatChapterNumber = (num: number): string => {
                         alt={chapterTitle}
                         class="w-full h-32 md:h-28 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-3"
                         loading="lazy"
-                        transition:name={`chapter-image-${slug}`}
                       />
                     )}
 

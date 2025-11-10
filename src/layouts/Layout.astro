@@ -4,6 +4,7 @@ import "../styles/global.css";
 import SEO from "@components/layouts/SEO.astro";
 import Navbar from "@components/layouts/Navbar.astro";
 import Footer from "@components/layouts/Footer.astro";
+import TransitionLoader from "@components/ui/TransitionLoader.astro";
 import { ClientRouter } from "astro:transitions";
 
 const { title, description } = Astro.props;
@@ -35,11 +36,38 @@ const name = "Mi Propio One Piece";
 
     <ClientRouter />
   </head>
-  <body class="bg-[var(--background)] text-[var(--foreground)]">
+
+  <body class="bg-[var(--background)] text-[var(--foreground)] relative">
+    <TransitionLoader />
+
     <Navbar icon={icon} name={name} />
     <main class="min-h-screen">
       <slot />
     </main>
     <Footer />
+
+    <script>
+      document.addEventListener("astro:before-preparation", () => {
+        const loader = document.getElementById("transition-loader");
+        if (loader) {
+          loader.classList.remove("hidden");
+          loader.style.display = "flex";
+          requestAnimationFrame(() => {
+            loader.style.opacity = "1";
+          });
+        }
+      });
+
+      document.addEventListener("astro:page-load", () => {
+        const loader = document.getElementById("transition-loader");
+        if (loader) {
+          loader.style.opacity = "0";
+          setTimeout(() => {
+            loader.style.display = "none";
+            loader.classList.add("hidden");
+          }, 200);
+        }
+      });
+    </script>
   </body>
 </html>

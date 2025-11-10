@@ -4,6 +4,9 @@ const password = import.meta.env.WP_PASSWORD
 const apiURL = `${domain}/wp-json/wp/v2`
 const jwtURL = `${domain}/wp-json/jwt-auth/v1/token`;
 
+// Cache para el token JWT
+let tokenCache: {token: string; expiry: number} | null = null;
+
 interface PostsCards {
 	id: number;
 	title: {rendered: string};
@@ -97,18 +100,12 @@ const extractChapterNumber = (slug: string): number => {
 	return match ? parseInt(match[1], 10) : 0;
 };
 
-export const getLatestPosts = async ({category, perPage = 10}: {category: string, perPage?: number}) => {
-	const token = await getToken();
-
+export const getLatestPosts = async ({category, perPage = 10, requireAuth = false}: {category: string, perPage?: number, requireAuth?: boolean}) => {
 	const categoryId = await getIdCategoryByName(category);
 
 	if (!categoryId) throw new Error('Invalid category');
 
-	const res = await fetch(`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	});
+	const res = await fetchWithOptionalAuth(`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`, requireAuth);
 
 	if (!res.ok) throw new Error('Failed to fetch latest posts');
 
@@ -151,18 +148,12 @@ export const getLatestPosts = async ({category, perPage = 10}: {category: string
 	return posts;
 };
 
-export const getAllChaptersOrdered = async (category: string) => {
-	const token = await getToken();
-
+export const getAllChaptersOrdered = async (category: string, requireAuth: boolean = false) => {
 	const categoryId = await getIdCategoryByName(category);
 
 	if (!categoryId) throw new Error('Invalid category');
 
-	const res = await fetch(`${apiURL}/posts?per_page=100&categories=${categoryId}&_embed`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	});
+	const res = await fetchWithOptionalAuth(`${apiURL}/posts?per_page=100&categories=${categoryId}&_embed`, requireAuth);
 
 	if (!res.ok) throw new Error('Failed to fetch chapters');
 
@@ -262,19 +253,13 @@ export const getReviews = async ({perPage = 3}) => {
 
 }
 
-export const getDocuments = async ({perPage = 10}: {perPage?: number} = {}) => {
+export const getDocuments = async ({perPage = 10, requireAuth = false}: {perPage?: number, requireAuth?: boolean} = {}) => {
 	try {
-		const token = await getToken();
-
 		const categoryId = await getIdCategoryByName('Documentos');
 
 		if (!categoryId) return [];
 
-		const res = await fetch(`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const res = await fetchWithOptionalAuth(`${apiURL}/posts?per_page=${perPage}&categories=${categoryId}&_embed`, requireAuth);
 
 		if (!res.ok) return [];
 
@@ -317,6 +302,11 @@ export const getDocuments = async ({perPage = 10}: {perPage?: number} = {}) => {
 };
 
 const getToken = async (): Promise<string> => {
+	// Verificar si el token en caché sigue siendo válido
+	if (tokenCache && Date.now() < tokenCache.expiry) {
+		return tokenCache.token;
+	}
+
 	const res = await fetch(jwtURL, {
 		method: 'POST',
 		headers: {
@@ -328,5 +318,24 @@ const getToken = async (): Promise<string> => {
 	if (!res.ok) throw new Error('Failed to get JWT token');
 
 	const data = await res.json();
+
+	// Cachear el token por 50 minutos (los tokens JWT suelen durar 1 hora)
+	tokenCache = {
+		token: data.token,
+		expiry: Date.now() + (50 * 60 * 1000)
+	};
+
 	return data.token;
+};
+
+// Función auxiliar para hacer fetch con token solo si es necesario
+const fetchWithOptionalAuth = async (url: string, requireAuth: boolean = false) => {
+	const headers: Record<string, string> = {};
+
+	if (requireAuth) {
+		const token = await getToken();
+		headers.Authorization = `Bearer ${token}`;
+	}
+
+	return fetch(url, {headers});
 }; 

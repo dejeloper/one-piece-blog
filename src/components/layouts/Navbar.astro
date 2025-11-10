@@ -16,7 +16,7 @@ const { name, icon } = Astro.props;
   <div class="container mx-auto px-4 py-4 flex items-center justify-between">
     <!-- Logo -->
     <div class="flex items-center space-x-2 z-60">
-      <a href="/" data-astro-prefetch="hover">
+      <a href="/" data-astro-prefetch>
         <span class="text-2xl font-bold text-[var(--primary)]">{icon}</span>
         <span class="text-xl font-semibold tracking-wide">{name}</span>
       </a>
@@ -29,7 +29,7 @@ const { name, icon } = Astro.props;
           <li>
             <a
               href={link.href}
-              data-astro-prefetch="hover"
+              data-astro-prefetch
               class="px-3 py-2 rounded-md hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition active:scale-95"
             >
               {link.label}
@@ -68,7 +68,7 @@ const { name, icon } = Astro.props;
           <li>
             <a
               href={link.href}
-              data-astro-prefetch="hover"
+              data-astro-prefetch
               class="block px-3 py-2 rounded-md hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition active:scale-95"
             >
               {link.label}

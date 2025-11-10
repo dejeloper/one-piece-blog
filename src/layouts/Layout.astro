@@ -4,7 +4,7 @@ import "../styles/global.css";
 import SEO from "@components/layouts/SEO.astro";
 import Navbar from "@components/layouts/Navbar.astro";
 import Footer from "@components/layouts/Footer.astro";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 
 const { title, description } = Astro.props;
 
@@ -33,17 +33,13 @@ const name = "Mi Propio One Piece";
       ogdescription={description || "Blog sobre mi propio One Piece"}
     />
 
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body class="bg-[var(--background)] text-[var(--foreground)]">
-    <!-- Navegación -->
     <Navbar icon={icon} name={name} />
-
     <main class="min-h-screen">
       <slot />
     </main>
-
-    <!-- Footer -->
     <Footer />
   </body>
 </html>

@@ -51,7 +51,7 @@ const { name, icon } = Astro.props;
   <!-- Overlay -->
   <div
     id="overlay"
-    class="fixed w-full min-h-screen inset-0 mt-[64px] bg-black/50 hidden z-20 transition-opacity duration-300"
+    class="fixed w-full min-h-screen inset-0 mt-[64px] bg-black/50 opacity-0 hidden z-20 transition-opacity duration-300"
   >
   </div>
 
@@ -80,23 +80,47 @@ const { name, icon } = Astro.props;
   </div>
 </nav>
 
-<script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
+<script>
+  function initMenu() {
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("mobile-menu");
     const overlay = document.getElementById("overlay");
 
+    if (!btn || !menu || !overlay) return;
+
     const toggleMenu = () => {
-      menu.classList.toggle("hidden");
-      menu.classList.toggle("translate-x-full");
-      overlay.classList.toggle("hidden");
-      setTimeout(() => {
-        overlay.classList.toggle("opacity-0");
-        overlay.classList.toggle("opacity-100");
-      }, 10);
+      const isMenuOpen = !menu.classList.contains("translate-x-full");
+
+      if (isMenuOpen) {
+        // Cerrar menú
+        menu.classList.add("translate-x-full");
+        overlay.classList.remove("opacity-100");
+        overlay.classList.add("opacity-0");
+
+        setTimeout(() => {
+          menu.classList.add("hidden");
+          overlay.classList.add("hidden");
+        }, 400);
+      } else {
+        // Abrir menú
+        menu.classList.remove("hidden");
+        overlay.classList.remove("hidden");
+
+        requestAnimationFrame(() => {
+          menu.classList.remove("translate-x-full");
+          overlay.classList.remove("opacity-0");
+          overlay.classList.add("opacity-100");
+        });
+      }
     };
 
     btn.addEventListener("click", toggleMenu);
     overlay.addEventListener("click", toggleMenu);
-  });
+  }
+
+  // Inicializar al cargar la página
+  document.addEventListener("DOMContentLoaded", initMenu);
+
+  // Re-inicializar después de cada navegación con view transitions
+  document.addEventListener("astro:page-load", initMenu);
 </script>

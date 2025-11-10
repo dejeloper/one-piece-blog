@@ -8,8 +8,8 @@ const { show = true } = Astro.props;
 {show && (
   <div
     id="transition-loader"
-    class="fixed inset-0 z-[9998] flex items-center justify-center backdrop-blur-md transition-opacity duration-700 ease-in-out"
-    style="background: linear-gradient(180deg, hsl(var(--primary)/0.05) 0%, var(--background) 50%, hsl(var(--primary)/0.08) 100%); color: var(--foreground);"
+    class="fixed inset-0 z-[9998] flex items-center justify-center backdrop-blur-md transition-opacity duration-700 ease-in-out pointer-events-none opacity-0"
+    style="background: linear-gradient(180deg, hsl(var(--primary)/0.05) 0%, var(--background) 50%, hsl(var(--primary)/0.08) 100%); color: var(--foreground); display: none;"
     role="status"
     aria-busy="true"
   >

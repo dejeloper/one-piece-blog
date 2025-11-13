@@ -22,18 +22,6 @@ const CACHE_DURATIONS = {
 	documents: 10
 } as const;
 
-interface PostsCards {
-	id: number;
-	title: {rendered: string};
-	excerpt: {rendered: string};
-	content: {rendered: string};
-	date: string;
-	slug: string;
-	_embedded?: {
-		'wp:featuredmedia'?: {source_url: string}[];
-	};
-}
-
 interface Chapter {
 	id: number;
 	title: string;
@@ -91,7 +79,74 @@ export const getPostsInfo = async (slug: string) => {
 	const authorAvatar = data._embedded?.author?.[0]?.avatar_urls?.['96'] || '';
 	const authorDescription = data._embedded?.author?.[0]?.description || '';
 
-	return {title, date, content, excerpt, featuredImage, alt_text_image, authorName, authorAvatar, authorDescription};
+	const navigation = await getChapterNavigation(slug);
+
+	return {
+		title,
+		date,
+		content,
+		excerpt,
+		featuredImage,
+		alt_text_image,
+		authorName,
+		authorAvatar,
+		authorDescription,
+		...navigation
+	};
+}
+
+export const getChapterNavigation = async (currentSlug: string) => {
+	try {
+		const chapters = await getAllChaptersOrdered('historia', false);
+
+		if (!chapters || chapters.length === 0) {
+			return {
+				isFirst: true,
+				isLast: true,
+				prevSlug: null,
+				nextSlug: null,
+				prevTitle: null,
+				nextTitle: null
+			};
+		}
+
+		const currentIndex = chapters.findIndex(chapter => chapter.slug === currentSlug);
+
+		if (currentIndex === -1) {
+			return {
+				isFirst: true,
+				isLast: true,
+				prevSlug: null,
+				nextSlug: null,
+				prevTitle: null,
+				nextTitle: null
+			};
+		}
+
+		const isFirst = currentIndex === 0;
+		const isLast = currentIndex === chapters.length - 1;
+		const prevChapter = !isFirst ? chapters[currentIndex - 1] : null;
+		const nextChapter = !isLast ? chapters[currentIndex + 1] : null;
+
+		return {
+			isFirst,
+			isLast,
+			prevSlug: prevChapter?.slug || null,
+			nextSlug: nextChapter?.slug || null,
+			prevTitle: prevChapter?.title || null,
+			nextTitle: nextChapter?.title || null
+		};
+	} catch (error) {
+		console.warn('Error getting chapter navigation:', error);
+		return {
+			isFirst: true,
+			isLast: true,
+			prevSlug: null,
+			nextSlug: null,
+			prevTitle: null,
+			nextTitle: null
+		};
+	}
 }
 
 export const getIdCategoryByName = async (name: string) => {

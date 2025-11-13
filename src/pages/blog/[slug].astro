@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { getAllPostsSlugs, getPostsInfo } from "@lib/wp";
+import ChapterNavButton from "@components/ui/ChapterNavButton.astro";
 
 const slug = Astro.params.slug;
 if (!slug) {
@@ -17,6 +18,12 @@ const {
   authorName,
   authorAvatar,
   authorDescription,
+  isFirst,
+  isLast,
+  prevSlug,
+  nextSlug,
+  prevTitle,
+  nextTitle,
 } = await getPostsInfo(slug);
 
 export async function getStaticPaths() {
@@ -81,26 +88,16 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
         Publicado el <span class="font-semibold">{dateFormatted}</span>
       </p>
 
-      <div class="text-center my-8">
-        <a
-          href="/chapters"
-          data-astro-prefetch
-          class="inline-flex items-center gap-2 no-underline bg-[var(--primary)] text-[var(--primary-foreground)] px-5 py-2.5 rounded-lg font-medium text-sm transition-all hover:bg-[var(--primary)]/90 active:scale-95"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"></path>
-          </svg>
-          Volver a todos los capítulos
-        </a>
+      <!-- Botones de navegación entre capítulos -->
+      <div class="border-t border-gray-200 pt-4 pb-8">
+        <ChapterNavButton
+          prevSlug={prevSlug}
+          prevTitle={prevTitle}
+          nextSlug={nextSlug}
+          nextTitle={nextTitle}
+          isFirst={isFirst}
+          isLast={isLast}
+        />
       </div>
 
       <!-- Caja del autor -->

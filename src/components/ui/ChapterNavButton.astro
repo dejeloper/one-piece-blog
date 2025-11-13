@@ -1,0 +1,159 @@
+---
+interface Props {
+  prevSlug?: string | null;
+  prevTitle?: string | null;
+  nextSlug?: string | null;
+  nextTitle?: string | null;
+  isFirst: boolean;
+  isLast: boolean;
+}
+
+const { prevSlug, prevTitle, nextSlug, nextTitle, isFirst, isLast } =
+  Astro.props;
+---
+
+<nav
+  class="w-full flex items-center justify-between gap-4"
+  aria-label="Navegación de capítulos"
+>
+  <!-- Botón Anterior -->
+  {
+    isFirst || !prevSlug ? (
+      <button
+        type="button"
+        disabled
+        class="inline-flex items-center gap-2 px-4 py-2.5
+          text-gray-400 bg-gray-100 cursor-not-allowed
+          border border-gray-300 rounded-lg
+          focus:outline-none"
+        aria-label="No hay capítulo anterior"
+      >
+        <svg
+          class="w-4 h-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m15 19-7-7 7-7"
+          />
+        </svg>
+        <span class="text-sm font-medium hidden sm:inline">Anterior</span>
+      </button>
+    ) : (
+      <a
+        href={`/blog/${prevSlug}`}
+        data-astro-prefetch
+        class="inline-flex items-center gap-2 px-4 py-2.5
+          text-white bg-[var(--primary)]/85 border border-[var(--primary)]/60
+          hover:bg-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/30
+          rounded-lg transition-all duration-200 focus:outline-none group no-underline"
+        aria-label={`Ir al capítulo anterior: ${prevTitle}`}
+      >
+        <svg
+          class="w-4 h-4 transition-transform group-hover:-translate-x-0.5"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m15 19-7-7 7-7"
+          />
+        </svg>
+        <span class="text-sm font-medium hidden sm:inline">Anterior</span>
+      </a>
+    )
+  }
+
+  <!-- Botón Todos los Capítulos -->
+  <a
+    href="/chapters"
+    data-astro-prefetch
+    class="inline-flex items-center justify-center gap-2 px-5 py-2.5
+      text-white bg-[var(--primary)]/85 border border-[var(--primary)]/60
+      hover:bg-[var(--primary)] rounded-lg
+      transition-all duration-200 focus:ring-2 focus:ring-[var(--primary)]/30
+      focus:outline-none no-underline"
+    aria-label="Ver todos los capítulos"
+  >
+    <svg
+      class="w-4 h-4"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+    <span class="text-sm font-medium">Capítulos</span>
+  </a>
+
+  <!-- Botón Siguiente -->
+  {
+    isLast || !nextSlug ? (
+      <button
+        type="button"
+        disabled
+        class="inline-flex items-center gap-2 px-4 py-2.5
+          text-gray-400 bg-gray-100 cursor-not-allowed
+          border border-gray-300 rounded-lg
+          focus:outline-none"
+        aria-label="No hay capítulo siguiente"
+      >
+        <span class="text-sm font-medium hidden sm:inline">Siguiente</span>
+        <svg
+          class="w-4 h-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m9 5 7 7-7 7"
+          />
+        </svg>
+      </button>
+    ) : (
+      <a
+        href={`/blog/${nextSlug}`}
+        data-astro-prefetch
+        class="inline-flex items-center gap-2 px-4 py-2.5
+          text-white bg-[var(--primary)]/85 border border-[var(--primary)]/60
+          hover:bg-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/30
+          rounded-lg transition-all duration-200 focus:outline-none group no-underline"
+        aria-label={`Ir al capítulo siguiente: ${nextTitle}`}
+      >
+        <span class="text-sm font-medium hidden sm:inline">Siguiente</span>
+        <svg
+          class="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m9 5 7 7-7 7"
+          />
+        </svg>
+      </a>
+    )
+  }
+</nav>

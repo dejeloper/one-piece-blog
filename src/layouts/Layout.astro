@@ -1,11 +1,13 @@
 ---
 import "@fontsource-variable/inter";
 import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import Analytics from "@vercel/analytics/astro";
+
 import SEO from "@components/layouts/SEO.astro";
 import Navbar from "@components/layouts/Navbar.astro";
 import Footer from "@components/layouts/Footer.astro";
 import TransitionLoader from "@components/ui/TransitionLoader.astro";
-import { ClientRouter } from "astro:transitions";
 
 const { title, description, ogimage } = Astro.props;
 
@@ -36,6 +38,7 @@ const name = "Mi Propio One Piece";
     />
 
     <ClientRouter />
+    <Analytics />
   </head>
 
   <body class="bg-[var(--background)] text-[var(--foreground)] relative">

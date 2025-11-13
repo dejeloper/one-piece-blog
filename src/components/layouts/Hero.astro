@@ -5,6 +5,8 @@ interface Props {
   whyThisBlog?: string;
   ctaText?: string;
   ctaLink?: string;
+  firstChapterText?: string;
+  firstChapterLink?: string;
   image?: string;
 }
 
@@ -14,6 +16,8 @@ const {
   whyThisBlog = "No hace falta conocer One Piece. Las referencias se explican y solo sirven como guiños a una historia sobre libertad, sueños y cambio.",
   ctaText = "Últimos capítulos",
   ctaLink = "#chapters",
+  firstChapterText = "Capítulo 1",
+  firstChapterLink = "/blog/cap-1-noticia",
   image = "/images/preview2.webp",
 } = Astro.props;
 ---
@@ -47,13 +51,22 @@ const {
         </p>
       </div>
 
-      <a
-        href={ctaLink}
-        data-astro-prefetch
-        class="inline-block bg-[var(--primary)] text-[var(--primary-foreground)] px-8 py-3 rounded-xl font-semibold text-lg shadow-md transition-all hover:-translate-y-1 hover:shadow-lg focus:ring-4 focus:ring-[var(--primary)]/40"
-      >
-        {ctaText}
-      </a>
+      <div class="flex flex-row gap-3 md:gap-4 justify-center md:justify-start">
+        <a
+          href={firstChapterLink}
+          data-astro-prefetch
+          class="inline-block bg-[var(--secondary)] text-[var(--secondary-foreground)] px-5 py-2.5 md:px-8 md:py-3 rounded-xl font-semibold text-sm md:text-lg shadow-md transition-all hover:-translate-y-1 hover:shadow-lg focus:ring-4 focus:ring-[var(--secondary)]/40 whitespace-nowrap"
+        >
+          {firstChapterText}
+        </a>
+        <a
+          href={ctaLink}
+          data-astro-prefetch
+          class="inline-block bg-[var(--primary)] text-[var(--primary-foreground)] px-5 py-2.5 md:px-8 md:py-3 rounded-xl font-semibold text-sm md:text-lg shadow-md transition-all hover:-translate-y-1 hover:shadow-lg focus:ring-4 focus:ring-[var(--primary)]/40 whitespace-nowrap"
+        >
+          {ctaText}
+        </a>
+      </div>
     </div>
 
     <!-- Imagen -->

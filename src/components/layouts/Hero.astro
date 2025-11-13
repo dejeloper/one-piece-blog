@@ -1,7 +1,8 @@
 ---
 interface Props {
   title?: string;
-  subtitle?: string;
+  summary?: string;
+  whyThisBlog?: string;
   ctaText?: string;
   ctaLink?: string;
   image?: string;
@@ -9,40 +10,61 @@ interface Props {
 
 const {
   title = "Mi propio One Piece",
-  subtitle = "El camino de la busqueda de la libertad a traves de One Piece.",
+  summary = "Una historia de aventura y autodescubrimiento inspirada en One Piece. José deja atrás su vida cómoda para enfrentar rupturas, seguir un impulso misterioso y lanzarse al mar de lo desconocido.",
+  whyThisBlog = "No hace falta conocer One Piece. Las referencias se explican y solo sirven como guiños a una historia sobre libertad, sueños y cambio.",
   ctaText = "Últimos capítulos",
   ctaLink = "#chapters",
-  image = "/images/preview.webp",
+  image = "/images/preview2.webp",
 } = Astro.props;
 ---
 
-<section id="home" class="py-20 px-4 animate-fade-in">
-  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+<header
+  id="home"
+  class="relative py-12 md:py-24 px-4 md:px-6 overflow-hidden bg-gradient-to-b from-background to-[var(--secondary)/10]"
+>
+  <div
+    class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center"
+  >
     <!-- Texto -->
-    <div class="text-center md:text-left">
-      <h1 class="text-4xl md:text-6xl font-bold mb-6">
+    <div class="text-center md:text-left space-y-5 md:space-y-8">
+      <h1
+        class="text-3xl md:text-6xl font-extrabold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--accent)]"
+      >
         {title}
       </h1>
-      <p class="text-xl md:text-2xl text-[var(--muted-foreground)] mb-8">
-        {subtitle}
-      </p>
+
+      <div class="space-y-3 md:space-y-4">
+        <p
+          class="text-base md:text-lg text-[var(--muted-foreground)] leading-relaxed"
+        >
+          {summary}
+        </p>
+
+        <p
+          class="text-sm md:text-base text-[var(--muted-foreground)]/80 leading-relaxed italic"
+        >
+          {whyThisBlog}
+        </p>
+      </div>
+
       <a
         href={ctaLink}
         data-astro-prefetch
-        class="inline-block bg-[var(--primary)]/90 text-[var(--primary-foreground)] px-8 py-3 rounded-lg font-semibold text-lg transition-transform active:scale-95 hover:bg-[var(--primary)]"
+        class="inline-block bg-[var(--primary)] text-[var(--primary-foreground)] px-8 py-3 rounded-xl font-semibold text-lg shadow-md transition-all hover:-translate-y-1 hover:shadow-lg focus:ring-4 focus:ring-[var(--primary)]/40"
       >
         {ctaText}
       </a>
     </div>
 
     <!-- Imagen -->
-    <div class="flex justify-center md:justify-end">
+    <figure class="relative flex justify-center md:justify-end">
       <img
         src={image}
-        alt="Ilustración decorativa"
-        class="rounded-lg shadow-lg max-h-[400px] object-cover"
+        alt="Ilustración inspirada en One Piece"
+        class="rounded-2xl shadow-xl max-h-[420px] w-full object-cover"
         loading="lazy"
       />
-    </div>
+      <figcaption class="sr-only">Imagen ilustrativa del blog</figcaption>
+    </figure>
   </div>
-</section>
+</header>

@@ -34,8 +34,6 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
   hour12: false,
 });
 
@@ -48,14 +46,17 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
     "Blog sobre mi propio One Piece. En búsqueda de mi libertad."}
   ogimage={featuredImage}
 >
+  <div
+    id="reading-progress"
+    class="fixed top-0 left-0 h-1 bg-[var(--primary)] z-50 w-0"
+  >
+  </div>
   <main class="pt-8 pb-16 lg:pt-16 lg:pb-24 antialiased">
     <article class="prose prose-lg mx-auto max-w-3xl px-4">
-      <!-- Título dinámico -->
       <h1 class="text-4xl font-extrabold tracking-tight mb-6 text-center">
         {title}
       </h1>
 
-      <!-- Imagen destacada dinámica -->
       {
         featuredImage && (
           <figure class="my-8">
@@ -77,18 +78,15 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
         )
       }
 
-      <!-- Contenido dinámico desde WordPress -->
       <div
         class="prose prose-lg mx-auto max-w-3xl leading-relaxed"
         set:html={content}
       />
 
-      <!-- Fecha de publicación -->
       <p class="text-sm text-gray-500 mt-12 justify-end text-right">
         Publicado el <span class="font-semibold">{dateFormatted}</span>
       </p>
 
-      <!-- Botones de navegación entre capítulos -->
       <div class="border-t border-gray-200 pt-4 pb-8">
         <ChapterNavButton
           prevSlug={prevSlug}
@@ -100,12 +98,10 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
         />
       </div>
 
-      <!-- Caja del autor -->
       <footer class="max-w-3xl sm:w-full mx-auto my-0 p-0 justify-center">
         <div
           class="w-full flex items-center justify-between gap-2 px-6 border border-gray-200 shadow-md rounded-xl bg-white my-0"
         >
-          <!-- Avatar -->
           <div class="flex-shrink-0 justify-end border-r pr-6">
             <img
               class="object-cover w-24 h-24 rounded-full ring-2 ring-primary-200"
@@ -115,7 +111,6 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
             />
           </div>
 
-          <!-- Info -->
           <div
             class="w-full flex flex-col justify-start items-start ml-4 mr-0 p-0 my-auto"
           >
@@ -126,4 +121,14 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
       </footer>
     </article>
   </main>
+
+  <script>
+    document.addEventListener("scroll", () => {
+      const doc = document.documentElement;
+      const progress =
+        (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
+      const bar = document.getElementById("reading-progress");
+      if (bar) bar.style.width = `${progress}%`;
+    });
+  </script>
 </Layout>

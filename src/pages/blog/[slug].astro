@@ -36,8 +36,6 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
   day: "2-digit",
   hour12: false,
 });
-
-// const prerender = false;
 ---
 
 <Layout
@@ -51,56 +49,67 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
     class="fixed top-0 left-0 h-1 bg-[var(--primary)] z-50 w-0"
   >
   </div>
-  <main class="pt-8 pb-16 lg:pt-16 lg:pb-24 antialiased">
-    <article class="prose prose-lg mx-auto max-w-3xl px-4">
-      <h1 class="text-4xl font-extrabold tracking-tight mb-6 text-center">
-        {title}
-      </h1>
-
-      {
-        featuredImage && (
-          <figure class="my-8">
-            <picture>
-              <img
-                src={featuredImage}
-                alt={alt_text_image}
-                title={alt_text_image}
-                class="w-full h-auto object-cover rounded-xl shadow-md"
-                loading="lazy"
-              />
-            </picture>
-            {excerpt && (
-              <figcaption class="mt-2 text-xs text-gray-500 italic">
-                {excerpt}
-              </figcaption>
-            )}
-          </figure>
-        )
-      }
-
+  <main class="pt-8 pb-16 lg:pt-8 lg:pb-24 antialiased">
+    <article class="prose prose-lg mx-auto max-w-3xl px-2">
       <div
-        class="prose prose-lg mx-auto max-w-3xl leading-relaxed"
-        set:html={content}
-      />
+        class="rounded-[1.25rem] sm:rounded-2xl px-5 py-7 sm:px-9 sm:py-10 bg-gradient-to-b from-[rgba(250,239,236,0.96)] to-[rgba(250,239,236,0.92)] shadow-[0_10px_25px_rgba(58,31,26,0.08),inset_0_0_0_1px_rgba(196,138,125,0.25)]"
+      >
+        <h1 class="text-4xl font-extrabold tracking-tight mb-6 text-center">
+          {title}
+        </h1>
 
-      <p class="text-sm text-gray-500 mt-12 justify-end text-right">
-        Publicado el <span class="font-semibold">{dateFormatted}</span>
-      </p>
+        {
+          featuredImage && (
+            <figure class="my-8 mb-14">
+              <picture>
+                <img
+                  src={featuredImage}
+                  alt={alt_text_image}
+                  title={alt_text_image}
+                  class="w-full h-auto object-cover rounded-xl shadow-md"
+                  loading="lazy"
+                />
+              </picture>
+              {excerpt && (
+                <figcaption class="mt-2 text-xs text-gray-500 italic text-center">
+                  {excerpt}
+                </figcaption>
+              )}
+            </figure>
+          )
+        }
 
-      <div class="border-t border-gray-200 pt-4 pb-8">
-        <ChapterNavButton
-          prevSlug={prevSlug}
-          prevTitle={prevTitle}
-          nextSlug={nextSlug}
-          nextTitle={nextTitle}
-          isFirst={isFirst}
-          isLast={isLast}
+        <div
+          class="prose prose-lg max-w-none
+         font-sans
+         text-[1.1rem] sm:text-[1.125rem]
+         leading-[1.85]
+         tracking-[0.005em]
+         text-[var(--foreground)]
+         [&_p]:mb-[1.7em]
+         [&_strong]:font-semibold"
+          set:html={content}
         />
+
+        <p class="text-sm text-gray-500 mt-12 justify-end text-right">
+          Publicado el <span class="font-semibold">{dateFormatted}</span>
+        </p>
+
+        <div class="border-t border-gray-200 pt-4 pb-8">
+          <ChapterNavButton
+            prevSlug={prevSlug}
+            prevTitle={prevTitle}
+            nextSlug={nextSlug}
+            nextTitle={nextTitle}
+            isFirst={isFirst}
+            isLast={isLast}
+          />
+        </div>
       </div>
 
-      <footer class="max-w-3xl sm:w-full mx-auto my-0 p-0 justify-center">
+      <footer class="max-w-3xl w-full mx-auto mt-5">
         <div
-          class="w-full flex items-center justify-between gap-2 px-6 border border-gray-200 shadow-md rounded-xl bg-white my-0"
+          class="w-full flex items-center justify-between gap-2 px-6 border border-gray-200 shadow-md rounded-xl bg-white"
         >
           <div class="flex-shrink-0 justify-end border-r pr-6">
             <img

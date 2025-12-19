@@ -21,6 +21,7 @@ const {
   nextSlug,
   prevTitle,
   nextTitle,
+  chapterNumber,
 } = await getPostsInfo(slug);
 
 export async function getStaticPaths() {
@@ -36,7 +37,7 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
 ---
 
 <Layout
-  title={title}
+  title={`Capítulo ${chapterNumber} - ${title}`}
   description={excerpt ||
     "Blog sobre mi propio One Piece. En búsqueda de mi libertad."}
   ogimage={featuredImage}
@@ -51,9 +52,24 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
       <div
         class="rounded-[1.25rem] sm:rounded-2xl px-5 py-7 sm:px-9 sm:py-10 bg-gradient-to-b from-[rgba(250,239,236,0.96)] to-[rgba(250,239,236,0.92)] shadow-[0_10px_25px_rgba(58,31,26,0.08),inset_0_0_0_1px_rgba(196,138,125,0.25)]"
       >
-        <h1 class="text-4xl font-extrabold tracking-tight mb-6 text-center">
-          {title}
-        </h1>
+        <header class="text-center mb-10">
+          <span
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase bg-[var(--primary)]/10 text-[var(--primary)] mb-4"
+          >
+            Capítulo {chapterNumber}
+          </span>
+          <h1
+            class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight
+           text-[var(--foreground)] leading-tight mb-5"
+          >
+            {title}
+          </h1>
+          <div
+            class="mx-auto mt-6 h-[3px] w-1/2 rounded-full
+           bg-gradient-to-r from-[var(--primary)]/60 to-[var(--primary)]/20"
+          >
+          </div>
+        </header>
 
         {
           featuredImage && (
@@ -81,11 +97,7 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
           set:html={content}
         />
 
-        <p class="text-sm text-gray-500 mt-12 justify-end text-right">
-          Publicado el <span class="font-semibold">{dateFormatted}</span>
-        </p>
-
-        <div class="border-t border-gray-200 pt-4 pb-8">
+        <footer class="mt-12 pt-6 border-t border-gray-300/50">
           <ChapterNavButton
             prevSlug={prevSlug}
             prevTitle={prevTitle}
@@ -94,7 +106,7 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
             isFirst={isFirst}
             isLast={isLast}
           />
-        </div>
+        </footer>
       </div>
     </article>
   </div>

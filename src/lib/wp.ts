@@ -80,6 +80,7 @@ export const getPostsInfo = async (slug: string) => {
 	const authorDescription = data._embedded?.author?.[0]?.description || '';
 
 	const navigation = await getChapterNavigation(slug);
+	const chapterNumber = extractChapterNumber(slug);
 
 	return {
 		title,
@@ -91,6 +92,7 @@ export const getPostsInfo = async (slug: string) => {
 		authorName,
 		authorAvatar,
 		authorDescription,
+		chapterNumber,
 		...navigation
 	};
 }

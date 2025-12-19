@@ -57,7 +57,7 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
 
         {
           featuredImage && (
-            <figure class="my-8 mb-14">
+            <figure class="my-8 mb-14 sm:my-10">
               <picture>
                 <img
                   src={featuredImage}
@@ -77,14 +77,7 @@ const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
         }
 
         <div
-          class="prose prose-lg max-w-none
-         font-sans
-         text-[1.1rem] sm:text-[1.125rem]
-         leading-[1.85]
-         tracking-[0.005em]
-         text-[var(--foreground)]
-         [&_p]:mb-[1.7em]
-         [&_strong]:font-semibold"
+          class="prose prose-neutral max-w-none text-[1.05rem] sm:text-[1.125rem] leading-[1.9] tracking-[0.006em] [&_p]:mb-[1.9em] [&_h2]:mt-[2.4em] [&_h3]:mt-[2em] [&_ul]:my-[1.6em] [&_li]:mb-[0.6em] [&_blockquote]:border-l-4 [&_blockquote]:pl-4 [&_blockquote]:italic [&_img]:rounded-xl text-[var(--foreground)]"
           set:html={content}
         />
 

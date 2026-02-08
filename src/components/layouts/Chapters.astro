@@ -45,7 +45,7 @@ const extractChapterNumber = (slug: string): number => {
               return bNumber - aNumber;
             })
             .slice(0, 3)
-            .map((chapter: Chapter) => {
+            .map((chapter: Chapter, index: number) => {
               const {
                 title,
                 excerpt,
@@ -60,7 +60,9 @@ const extractChapterNumber = (slug: string): number => {
               const chapterLabel = formatChapterNumber(displayChapterNumber);
 
               return (
-                <div class="bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition flex flex-col h-full">
+                <div
+                  class={`bg-[var(--card)] border border-[var(--border)] p-6 rounded-lg shadow-sm hover:shadow-md transition flex flex-col h-full ${index === 2 ? "hidden lg:block" : ""}`}
+                >
                   {featuredImage && (
                     <a href={`/blog/${slug}`} data-astro-prefetch>
                       <picture>

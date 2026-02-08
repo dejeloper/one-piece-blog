@@ -39,27 +39,6 @@ const reviews = await getReviews({ perPage: 3 });
   <!-- Documentos -->
   <Documents />
 
-  <!-- Curiosidades -->
-  {
-    curiosities && curiosities.length > 0 ? (
-      <Curiosities curiosities={curiosities} />
-    ) : (
-      <div class="sr-only">No hay curiosidades disponibles.</div>
-    )
-  }
-
-  <!-- Reseñas -->
-  {
-    reviews && reviews.length > 0 ? (
-      <Reviews reviews={reviews} title="Opiniones de los lectores" />
-    ) : (
-      <div class="sr-only">No hay reseñas disponibles.</div>
-    )
-  }
-
-  <!-- Newsletter -->
-  <!-- <Newsletter /> -->
-
   <!-- Sobre el autor y contacto -->
   <Author />
 </Layout>

@@ -12,7 +12,7 @@ import TransitionLoader from "@components/ui/TransitionLoader.astro";
 const { title, description, ogimage } = Astro.props;
 
 const icon = "☠️";
-const name = "Mi Propio One Piece";
+const name = "El viaje hacia la libertad";
 ---
 
 <!doctype html>
@@ -28,12 +28,14 @@ const name = "Mi Propio One Piece";
     <!-- SEO -->
     <SEO
       title={Astro.props.title || name}
-      description={description || "Blog sobre mi propio One Piece"}
+      description={description ||
+        "El viaje hacia la libertad: una historia de aventura y autodescubrimiento inspirada en el espíritu de One Piece. Un desarrollador colombiano abandona su vida estable para seguir una travesía global en busca de libertad."}
       url="https://www.onepiece.dejeloper.com"
       author="Jhonatan Guerrero"
-      keywords="One Piece, Anime, Manga, libertad, aventura, piratas, tesoro, Grand Line, Sombrero de Paja, Luffy, Zoro, Nami, Usopp, Sanji, Chopper, Robin, Franky, Brook, Jinbe"
+      keywords="fanfic one piece, fanfiction one piece, aventura, libertad, viaje, búsqueda personal, historia inspirada en one piece, aventura moderna, viaje personal, exploración, sueños, piratas, libertad y aventura"
       ogtitle={Astro.props.title || name}
-      ogdescription={description || "Blog sobre mi propio One Piece"}
+      ogdescription={description ||
+        "Una historia de aventura y búsqueda personal inspirada en One Piece. Un hombre deja atrás su vida estable para seguir un viaje hacia la libertad."}
       ogimage={ogimage}
     />
 

@@ -1,0 +1,89 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getEntry } from "astro:content";
+
+const entry = await getEntry("legal", "aviso-legal");
+
+if (!entry) {
+  throw new Error("Legal notice not found");
+}
+
+const { Content } = await entry.render();
+const { title, description } = entry.data;
+---
+
+<Layout
+  title={`${title} - El viaje hacia la libertad`}
+  description={description}
+>
+  <main class="min-h-screen bg-[var(--background)]">
+    <!-- Barra superior estilo documento -->
+    <div
+      class="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-200/50"
+    >
+      <div
+        class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <div class="flex items-center space-x-3">
+          <a
+            href="/"
+            data-astro-prefetch
+            class="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Inicio
+          </a>
+          <span class="text-gray-400">/</span>
+          <span class="text-gray-900 font-medium">{title}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenedor del documento -->
+    <div class="max-w-4xl mx-auto px-4 pt-4 pb-12">
+      <article
+        class="bg-white rounded-xl shadow-sm border border-gray-200/50 p-8 md:p-12"
+      >
+        <div
+          class="prose prose-lg prose-headings:text-[var(--foreground)] prose-h1:text-3xl prose-h1:md:text-4xl prose-h1:font-bold prose-h1:mb-8 prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-[var(--primary)] prose-p:text-gray-700 prose-p:leading-relaxed prose-strong:text-[var(--primary)] prose-strong:font-semibold prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline prose-ul:my-4 prose-li:text-gray-700 prose-hr:my-8 prose-hr:border-[var(--border)] prose-blockquote:border-l-4 prose-blockquote:border-[var(--primary)] prose-blockquote:bg-[var(--muted)]/30 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:italic max-w-none"
+        >
+          <Content />
+        </div>
+      </article>
+
+      <!-- Botón para regresar -->
+      <div class="text-center mt-10">
+        <a
+          href="/"
+          data-astro-prefetch
+          class="inline-flex items-center gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-3 rounded-lg font-semibold transition-all hover:bg-[var(--primary)]/90 active:scale-95"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Volver al inicio
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>

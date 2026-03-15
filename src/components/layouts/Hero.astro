@@ -1,6 +1,7 @@
 ---
 interface Props {
   title?: string;
+  subtitle?: string;
   summary?: string;
   whyThisBlog?: string;
   ctaText?: string;
@@ -11,9 +12,10 @@ interface Props {
 }
 
 const {
-  title = "Mi propio One Piece",
-  summary = "Una historia de aventura y autodescubrimiento inspirada en One Piece. José deja atrás su vida cómoda para enfrentar rupturas, seguir un impulso misterioso y lanzarse al mar de lo desconocido.",
-  whyThisBlog = "No hace falta conocer One Piece. Las referencias se explican y solo sirven como guiños a una historia sobre libertad, sueños y cambio.",
+  title = "El viaje hacia la libertad 1",
+  subtitle = "Una historia de aventura y autodescubrimiento inspirada en el espíritu de One Piece.",
+  summary = "José deja atrás su vida cómoda para enfrentar rupturas personales y seguir un impulso misterioso que lo empuja a recorrer el mundo. Entre pistas, viajes y encuentros inesperados, descubrirá que las aventuras más importantes no empiezan con un mapa, sino con la decisión de cambiar.",
+  whyThisBlog = "No es necesario conocer la obra original para disfrutar la historia. Las referencias funcionan únicamente como guiños a una narrativa sobre libertad, sueños y transformación.",
   ctaText = "Últimos capítulos",
   ctaLink = "#chapters",
   firstChapterText = "Capítulo 1",
@@ -38,6 +40,11 @@ const {
       </h1>
 
       <div class="space-y-3 md:space-y-4">
+        <h2
+          class="text-lg md:text-2xl font-medium text-[var(--muted-foreground)]"
+        >
+          {subtitle}
+        </h2>
         <p
           class="text-base md:text-lg text-[var(--muted-foreground)] leading-relaxed"
         >

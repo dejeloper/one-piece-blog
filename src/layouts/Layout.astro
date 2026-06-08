@@ -24,8 +24,8 @@ const name = "El viaje hacia la libertad";
 
     <!-- Prevent FOUC by setting CSS variables and hiding content until CSS is loaded -->
     <script is:inline>
-      (function() {
-        const style = document.createElement('style');
+      (function () {
+        const style = document.createElement("style");
         style.textContent = `
           :root {
             --background: #f3e8e5;
@@ -56,15 +56,15 @@ const name = "El viaje hacia la libertad";
         document.head.appendChild(style);
 
         // Mark as loaded when document is interactive
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', () => {
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () => {
             requestAnimationFrame(() => {
-              document.documentElement.setAttribute('data-loaded', 'true');
+              document.documentElement.setAttribute("data-loaded", "true");
             });
           });
         } else {
           requestAnimationFrame(() => {
-            document.documentElement.setAttribute('data-loaded', 'true');
+            document.documentElement.setAttribute("data-loaded", "true");
           });
         }
       })();

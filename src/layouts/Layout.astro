@@ -3,6 +3,7 @@ import "@fontsource-variable/inter";
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import Analytics from "@vercel/analytics/astro";
+import "@scripts/loader";
 
 import SEO from "@components/layouts/SEO.astro";
 import Navbar from "@components/layouts/Navbar.astro";
@@ -100,38 +101,5 @@ const name = "El viaje hacia la libertad";
     </main>
     <Footer />
 
-    <script>
-      const transitionLoader = () => {
-        const loader = document.getElementById("transition-loader");
-        if (!loader) return;
-
-        document.addEventListener("astro:before-preparation", () => {
-          document.documentElement.style.scrollBehavior = "auto";
-          window.scrollTo(0, 0);
-          document.documentElement.removeAttribute("data-loaded");
-          loader.classList.remove("hidden");
-          loader.style.display = "flex";
-          loader.style.pointerEvents = "auto";
-          loader.style.opacity = "0";
-          requestAnimationFrame(() => {
-            loader.style.opacity = "1";
-          });
-        });
-
-        document.addEventListener("astro:page-load", () => {
-          document.documentElement.setAttribute("data-loaded", "true");
-          loader.style.opacity = "0";
-          loader.style.pointerEvents = "none";
-          setTimeout(() => {
-            loader.style.display = "none";
-            loader.classList.add("hidden");
-            document.documentElement.style.scrollBehavior = "smooth";
-          }, 700);
-        });
-      };
-
-      transitionLoader();
-      document.addEventListener("astro:after-swap", transitionLoader);
-    </script>
   </body>
 </html>

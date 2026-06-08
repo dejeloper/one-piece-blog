@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.onepiece.dejeloper.com/sitemap-index.xml
+
+# Desallow specific bot patterns if needed
+# User-agent: AhrefsBot
+# Disallow: /
+
+# User-agent: SemrushBot
+# Disallow: /

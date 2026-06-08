@@ -28,18 +28,14 @@ export async function getStaticPaths() {
   const slugs: string[] = await getAllPostsSlugs();
   return slugs.map((slug: string) => ({ params: { slug } }));
 }
-const dateFormatted = new Date(date).toLocaleDateString("es-ES", {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour12: false,
-});
 ---
 
 <Layout
   title={`Capítulo ${chapterNumber} - ${title}`}
   description={excerpt || "Blog sobre El viaje hacia la libertad."}
   ogimage={featuredImage}
+  schemaType="BlogPosting"
+  publishedDate={new Date(date).toISOString()}
 >
   <div
     id="reading-progress"

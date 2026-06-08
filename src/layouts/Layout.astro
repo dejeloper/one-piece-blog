@@ -22,6 +22,41 @@ const name = "El viaje hacia la libertad";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
 
+    <!-- Prevent FOUC by setting CSS variables immediately -->
+    <script is:inline>
+      const css = `
+        :root {
+          --background: #f3e8e5;
+          --foreground: #3a1f1a;
+          --card: #faefec;
+          --card-foreground: #3a1f1a;
+          --popover: #edd2cd;
+          --popover-foreground: #3a1f1a;
+          --primary: #b64232;
+          --primary-foreground: #fff;
+          --secondary: #8c3f2e;
+          --secondary-foreground: #fff;
+          --muted: #d6b0a7;
+          --muted-foreground: #5a2f28;
+          --accent: #e85c41;
+          --accent-foreground: #fff;
+          --destructive: #a3261c;
+          --destructive-foreground: #fff;
+          --border: #c48a7d;
+          --input: #faefec;
+          --ring: rgba(232, 92, 65, 0.4);
+        }
+        body {
+          background-color: var(--background);
+          color: var(--foreground);
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+      `;
+      const style = document.createElement('style');
+      style.textContent = css;
+      document.head.insertAdjacentElement('afterbegin', style);
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/icon-one-piece.svg" />
 

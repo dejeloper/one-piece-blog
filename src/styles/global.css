@@ -2,40 +2,48 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #f3e8e5; /* Rojizo muy claro, base elegante */
-  --foreground: #3a1f1a; /* Marrón rojizo profundo (no negro) */
+  --background: #f3e8e5;
+  --foreground: #3a1f1a;
 
-  --card: #faefec; /* Marfil rosado */
+  --card: #faefec;
   --card-foreground: #3a1f1a;
 
-  --popover: #edd2cd; /* Rosa terracota suave */
+  --popover: #edd2cd;
   --popover-foreground: #3a1f1a;
 
-  --primary: #b64232; /* Rojo terracota intenso */
+  --primary: #b64232;
   --primary-foreground: #fff;
 
-  --secondary: #8c3f2e; /* Marrón rojizo, cuero cálido */
+  --secondary: #8c3f2e;
   --secondary-foreground: #fff;
 
-  --muted: #d6b0a7; /* Rosa apagado, soporte */
-  --muted-foreground: #5a2f28; /* Marrón rojizo apagado */
+  --muted: #d6b0a7;
+  --muted-foreground: #5a2f28;
 
-  --accent: #e85c41; /* Rojo fuego, vibrante y aventurero */
+  --accent: #e85c41;
   --accent-foreground: #fff;
 
-  --destructive: #a3261c; /* Rojo vino fuerte */
+  --destructive: #a3261c;
   --destructive-foreground: #fff;
 
-  --border: #c48a7d; /* Terracota suave */
+  --border: #c48a7d;
   --input: #faefec;
-  --ring: rgba(232, 92, 65, 0.4); /* Glow rojizo fuego */
+  --ring: rgba(232, 92, 65, 0.4);
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
 }
 
 .animate-fade-in {

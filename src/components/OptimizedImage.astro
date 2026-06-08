@@ -1,0 +1,52 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  title?: string;
+  class?: string;
+  priority?: boolean;
+  format?: "webp" | "avif" | "jpg" | "png";
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  title,
+  class: className,
+  priority = false,
+  format = "webp"
+} = Astro.props;
+
+const loading = priority ? "eager" : "lazy";
+const decoding = priority ? "sync" : "async";
+---
+
+<picture>
+  {src.endsWith('.jpg') || src.endsWith('.png') ? (
+    <>
+      <source
+        srcset={src.replace(/\.(jpg|png)$/i, '.webp')}
+        type="image/webp"
+      />
+      <source
+        srcset={src.replace(/\.(jpg|png)$/i, '.avif')}
+        type="image/avif"
+      />
+    </>
+  ) : null}
+  <img
+    {src}
+    {alt}
+    {width}
+    {height}
+    {title}
+    class={className}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={priority ? "high" : "low"}
+  />
+</picture>

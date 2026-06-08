@@ -71,15 +71,15 @@ const icons: Record<string, string> = {
       <div class="space-y-6">
         <!-- Foto centrada arriba -->
         <div class="text-center">
-          <picture>
-            <source srcset={image} type="image/webp" />
-            <img
-              src={image}
-              alt={`Retrato de ${name}`}
-              loading="lazy"
-              class="rounded-full shadow-sm w-24 h-24 object-cover mx-auto"
-            />
-          </picture>
+          <img
+            src={image}
+            alt={`Retrato de ${name}`}
+            width={96}
+            height={96}
+            loading="lazy"
+            decoding="async"
+            class="rounded-full shadow-sm w-24 h-24 object-cover mx-auto"
+          />
         </div>
 
         <!-- Enlaces -->

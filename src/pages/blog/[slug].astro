@@ -69,15 +69,16 @@ export async function getStaticPaths() {
         {
           featuredImage && (
             <figure class="my-8 mb-14 sm:my-10">
-              <picture>
-                <img
-                  src={featuredImage}
-                  alt={alt_text_image}
-                  title={alt_text_image}
-                  class="w-full h-auto object-cover rounded-xl shadow-md"
-                  loading="lazy"
-                />
-              </picture>
+              <img
+                src={featuredImage}
+                alt={alt_text_image}
+                title={alt_text_image}
+                width={1200}
+                height={675}
+                class="w-full h-auto object-cover rounded-xl shadow-md"
+                loading="lazy"
+                decoding="async"
+              />
               {excerpt && (
                 <figcaption class="mt-2 text-xs text-gray-500 italic text-center">
                   {excerpt}

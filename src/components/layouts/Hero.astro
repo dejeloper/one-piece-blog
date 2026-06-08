@@ -1,4 +1,6 @@
 ---
+import OptimizedImage from "@components/OptimizedImage.astro";
+
 interface Props {
   title?: string;
   subtitle?: string;
@@ -78,11 +80,13 @@ const {
 
     <!-- Imagen -->
     <figure class="relative flex justify-center md:justify-end">
-      <img
+      <OptimizedImage
         src={image}
         alt="Ilustración inspirada en One Piece"
+        width={800}
+        height={450}
         class="rounded-2xl shadow-xl max-h-[420px] w-full object-cover"
-        loading="lazy"
+        priority={true}
       />
       <figcaption class="sr-only">Imagen ilustrativa del blog</figcaption>
     </figure>

@@ -3,7 +3,6 @@ import "@fontsource-variable/inter";
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import Analytics from "@vercel/analytics/astro";
-import "@scripts/loader";
 
 import SEO from "@components/layouts/SEO.astro";
 import Navbar from "@components/layouts/Navbar.astro";
@@ -22,54 +21,6 @@ const name = "El viaje hacia la libertad";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-
-    <!-- Prevent FOUC by setting CSS variables and hiding content until CSS is loaded -->
-    <script is:inline>
-      (function () {
-        const style = document.createElement("style");
-        style.textContent = `
-          :root {
-            --background: #f3e8e5;
-            --foreground: #3a1f1a;
-            --card: #faefec;
-            --card-foreground: #3a1f1a;
-            --popover: #edd2cd;
-            --popover-foreground: #3a1f1a;
-            --primary: #b64232;
-            --primary-foreground: #fff;
-            --secondary: #8c3f2e;
-            --secondary-foreground: #fff;
-            --muted: #d6b0a7;
-            --muted-foreground: #5a2f28;
-            --accent: #e85c41;
-            --accent-foreground: #fff;
-            --destructive: #a3261c;
-            --destructive-foreground: #fff;
-            --border: #c48a7d;
-            --input: #faefec;
-            --ring: rgba(232, 92, 65, 0.4);
-          }
-          html { width: 100%; height: 100%; overflow-x: hidden; }
-          body { width: 100%; margin: 0; padding: 0; background-color: var(--background); color: var(--foreground); font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-          html:not([data-loaded]) body { opacity: 0; transition: opacity 0.2s ease-in-out; }
-          html[data-loaded] body { opacity: 1; }
-        `;
-        document.head.appendChild(style);
-
-        // Mark as loaded when document is interactive
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", () => {
-            requestAnimationFrame(() => {
-              document.documentElement.setAttribute("data-loaded", "true");
-            });
-          });
-        } else {
-          requestAnimationFrame(() => {
-            document.documentElement.setAttribute("data-loaded", "true");
-          });
-        }
-      })();
-    </script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/icon-one-piece.svg" />
@@ -101,5 +52,33 @@ const name = "El viaje hacia la libertad";
     </main>
     <Footer />
 
+    <script is:inline>
+      const hideLoader = () => {
+        const loader = document.getElementById("transition-loader");
+        if (!loader) return;
+        loader.style.opacity = "0";
+        loader.style.pointerEvents = "none";
+      };
+
+      const showLoader = () => {
+        const loader = document.getElementById("transition-loader");
+        if (!loader) return;
+        loader.style.opacity = "1";
+        loader.style.pointerEvents = "auto";
+      };
+
+      hideLoader();
+
+      document.addEventListener("astro:before-preparation", () => {
+        document.documentElement.style.scrollBehavior = "auto";
+        window.scrollTo(0, 0);
+        showLoader();
+      });
+
+      document.addEventListener("astro:page-load", () => {
+        document.documentElement.style.scrollBehavior = "smooth";
+        hideLoader();
+      });
+    </script>
   </body>
 </html>

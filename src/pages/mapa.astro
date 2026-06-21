@@ -1,0 +1,432 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { getAllChaptersOrdered } from "../lib/wp";
+
+const chapters = await getAllChaptersOrdered("historia");
+const maxChapter = chapters.length;
+
+const characters = [
+  {
+    id: "jose",
+    name: "José Rivera",
+    color: "#2c2c2c",
+    unlocksAt: 1,
+    description: "Desarrollador de Software, Colombiano.",
+    places: [
+      {
+        order: 1,
+        chapter: 1,
+        location: "Bogotá, Colombia",
+        QR: false,
+        note: "Decide iniciar el viaje tras la noticia de Oda.",
+      },
+      {
+        order: 2,
+        chapter: 4,
+        location: "Cartagena, Colombia",
+        QR: true,
+        note: "Pista 1: Valida con el Sr. Taka en el Museo de la Inquisición.",
+      },
+      {
+        order: 3,
+        chapter: 9,
+        location: "Ciudad de México, México",
+        QR: false,
+        note: "Llegada a México y visita al Museo de Antropología.",
+      },
+      {
+        order: 4,
+        chapter: 11,
+        location: "Cholula, México",
+        QR: false,
+        note: "Confusión con la pirámide y la iglesia.",
+      },
+      {
+        order: 5,
+        chapter: 11,
+        location: "Chichén Itzá, México",
+        QR: false,
+        note: "Un guía le revela que el destino es otro.",
+      },
+      {
+        order: 6,
+        chapter: 12,
+        location: "Flores, Guatemala",
+        QR: true,
+        note: "Pista 2: Valida con James en la plaza de la iglesia.",
+      },
+      {
+        order: 7,
+        chapter: 16,
+        location: "Bogotá, Colombia",
+        QR: false,
+        note: "Pausa: Regreso a casa para el cumpleaños de su madre y confrontación familiar.",
+      },
+      {
+        order: 8,
+        chapter: 17,
+        location: "Miami, Estados Unidos",
+        QR: false,
+        note: "Escala técnica y cena con Manuel y Martina.",
+      },
+      {
+        order: 9,
+        chapter: 18,
+        location: "Southampton, Bermudas",
+        QR: true,
+        note: "Pista 3: Valida con Helena Fairchild en el faro de Gibbs.",
+      },
+      {
+        order: 10,
+        chapter: 20,
+        location: "Miami, Estados Unidos",
+        QR: false,
+        note: "Pausa: Creación de su LLC y primera sesión de terapia con Elizabeth.",
+      },
+      {
+        order: 11,
+        chapter: 22,
+        location: "París, Francia",
+        QR: false,
+        note: "Pausa: Encuentro en el Sena con Alexis y Malaya. Lección del 'banco de espera'.",
+      },
+      {
+        order: 12,
+        chapter: 24,
+        location: "Reikiavik, Islandia",
+        QR: true,
+        note: "Pista 4: Valida con Thomas Kawakami frente a Hallgrímskirkja.",
+      },
+      {
+        order: 13,
+        chapter: 31,
+        location: "Madrid, España",
+        QR: false,
+        note: "Pausa: Resolución de crisis laboral y cancelación del vuelo de regreso.",
+      },
+    ],
+  },
+  {
+    id: "alexis",
+    name: "Alexis",
+    color: "#1d4ed8",
+    unlocksAt: 4,
+    description: "Fotógrafa, Alemana.",
+    places: [
+      {
+        order: 1,
+        chapter: 4,
+        location: "Cartagena, Colombia",
+        QR: true,
+        note: "Pista 1: Se registra inmediatamente después de José (#2).",
+      },
+      {
+        order: 2,
+        chapter: 22,
+        location: "Buenos Aires, Argentina",
+        QR: true,
+        note: "Hito revelado en París: Su segunda pista.",
+      },
+      {
+        order: 3,
+        chapter: 22,
+        location: "Dakar, Senegal",
+        QR: true,
+        note: "Hito revelado en París: Tercera pista donde conoció a Malaya.",
+      },
+      {
+        order: 4,
+        chapter: 22,
+        location: "Dublín, Irlanda",
+        QR: true,
+        note: "Hito revelado en París: Cuarta pista validada.",
+      },
+      {
+        order: 5,
+        chapter: 22,
+        location: "París, Francia",
+        QR: false,
+        note: "Pausa: Reencuentro con José y viaje en 'modo Mitfahrbänkli'.",
+      },
+      {
+        order: 6,
+        chapter: 31,
+        location: "Bruselas, Bélgica",
+        QR: true,
+        note: "Buscando el código junto a Malaya.",
+      },
+    ],
+  },
+  {
+    id: "malaya",
+    name: "Malaya",
+    color: "#7c3aed",
+    unlocksAt: 22,
+    description: "Asesora de bodas, Filipina.",
+    places: [
+      {
+        order: 1,
+        chapter: 22,
+        location: "Cartagena, Colombia",
+        QR: true,
+        note: "Pista 1: Inicio obligatorio del recorrido.",
+      },
+      {
+        order: 1,
+        chapter: 22,
+        location: "Houston, Estados Unidos",
+        QR: true,
+        note: "Pista 2: Su primer destino a Estados Unidos.",
+      },
+      {
+        order: 3,
+        chapter: 22,
+        location: "Recife, Brasil",
+        QR: true,
+        note: "Pista 3: Estancia de 5 días en la 'Venecia de Brasil'.",
+      },
+      {
+        order: 4,
+        chapter: 22,
+        location: "Dublín, Irlanda",
+        QR: true,
+        note: "Pista 4: Validada junto a Alexis.",
+      },
+      {
+        order: 5,
+        chapter: 22,
+        location: "París, Francia",
+        QR: false,
+        note: "Pausa: Cuestiona a José sobre su concepto de libertad.",
+      },
+      {
+        order: 6,
+        chapter: 31,
+        location: "Bruselas, Bélgica",
+        QR: true,
+        note: "Buscando el código junto a Alexis.",
+      },
+    ],
+  },
+  {
+    id: "bartolome",
+    name: "Bartolomé",
+    color: "#b45309",
+    unlocksAt: 24,
+    description: "Exprofesor de matemáticas francés. Nakama oficial de José.",
+    places: [
+      {
+        order: 1,
+        chapter: 30,
+        location: "Cartagena, Colombia",
+        QR: true,
+        note: "Pista 1: Inicio de su travesía.",
+      },
+      {
+        order: 2,
+        chapter: 30,
+        location: "Montevideo, Uruguay",
+        QR: true,
+        note: "Pista 2: Su primer destino tras Colombia.",
+      },
+      {
+        order: 3,
+        chapter: 30,
+        location: "Recife, Brasil",
+        QR: true,
+        note: "Pista 3: Trayecto mencionado durante su café en Islandia.",
+      },
+      {
+        order: 4,
+        chapter: 25,
+        location: "Reikiavik, Islandia",
+        QR: true,
+        note: "Pista 4: Valida con Thomas y se hace nakama de José.",
+      },
+      {
+        order: 5,
+        chapter: 30,
+        location: "Barcelona, España",
+        QR: false,
+        note: "Siguiente destino planeado mencionado a José.",
+      },
+    ],
+  },
+];
+---
+
+<Layout
+  title="Mapa de Viajes | El viaje hacia la libertad"
+  description="Explora qué islas y países ha visitado cada personaje de One Piece a lo largo de su aventura por el mundo."
+>
+  <div class="max-w-225 mx-auto">
+    <header class="mb-12">
+      <h2 class="mb-6 text-[2.4rem] font-bold">Mapa de Viajes</h2>
+
+      <div class="flex flex-col gap-5">
+        <div>
+          <label
+            for="character-select"
+            class="block mb-1.5 text-xs uppercase tracking-[0.08em] font-semibold"
+            style="color: var(--accent)">Personaje</label
+          >
+          <select
+            id="character-select"
+            class="border border-gray-300 rounded-md px-2 py-1.5 text-sm bg-white cursor-pointer"
+          ></select>
+        </div>
+
+        <div>
+          <label
+            class="block mb-1.5 text-xs uppercase tracking-[0.08em] font-semibold"
+            style="color: var(--accent)">Capítulo</label
+          >
+          <div class="flex items-center gap-3">
+            <button
+              id="chapter-prev"
+              class="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-black/8 hover:bg-black/15 transition text-base font-bold leading-none"
+              aria-label="Capítulo anterior">−</button
+            >
+            <div class="flex-1 items-center h-3">
+              <div
+                class="w-full rounded-full h-4 overflow-hidden"
+                style="background-color: color-mix(in oklab, var(--accent) 20%, transparent)"
+              >
+                <div
+                  id="chapter-bar"
+                  class="bg-[var(--accent)] h-4 rounded-full transition-all duration-150"
+                  style={`width: ${(1 / maxChapter) * 100}%`}
+                >
+                </div>
+              </div>
+              <div
+                id="chapter-counter"
+                class="text-xs opacity-50 mt-1 text-right"
+              >
+                1 / {maxChapter} capítulos
+              </div>
+            </div>
+            <button
+              id="chapter-next"
+              class="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-black/8 hover:bg-black/15 transition text-base font-bold leading-none"
+              aria-label="Capítulo siguiente">+</button
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section id="character-section" class="mb-8"></section>
+
+    <div id="map" class="w-full mb-12"></div>
+
+    <section
+      id="timeline"
+      class="relative pl-10 before:content-[''] before:absolute before:left-2.75 before:top-0 before:bottom-0 before:w-0.5 before:bg-black/25"
+    >
+    </section>
+  </div>
+</Layout>
+
+<script define:vars={{ characters, maxChapter }}>
+  let currentChapter = 1;
+  let selectedCharacterId = "jose";
+
+  function getUnlockedCharacters(chapter) {
+    return characters.filter((c) => c.unlocksAt <= chapter);
+  }
+
+  function renderSelect(chapter) {
+    const select = document.getElementById("character-select");
+    const unlocked = getUnlockedCharacters(chapter);
+
+    if (!unlocked.find((c) => c.id === selectedCharacterId)) {
+      selectedCharacterId = unlocked[0]?.id;
+    }
+
+    select.innerHTML = unlocked
+      .map(
+        (c) =>
+          `<option value="${c.id}" ${c.id === selectedCharacterId ? "selected" : ""}>${c.name}</option>`,
+      )
+      .join("");
+  }
+
+  function renderCharacterSection(character) {
+    const section = document.getElementById("character-section");
+    section.innerHTML = `
+      <div class="flex items-start gap-3">
+        <div class="w-3 h-3 rounded-full mt-1.5 flex-shrink-0" style="background-color:${character.color}"></div>
+        <div>
+          <h3 class="font-bold text-lg leading-tight">${character.name}</h3>
+          <p class="text-sm opacity-60 mt-0.5">${character.description}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderTimeline(character, chapter) {
+    const timeline = document.getElementById("timeline");
+    const places = character.places
+      .filter((m) => m.chapter <= chapter)
+      .sort((a, b) => a.order - b.order);
+
+    if (places.length === 0) {
+      timeline.innerHTML = `<p class="text-sm opacity-40 italic">Sin hitos registrados aún.</p>`;
+      return;
+    }
+
+    timeline.innerHTML = places
+      .map(
+        (m) => `
+      <div class="relative mb-6">
+        <div class="absolute -left-[2.125rem] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-white shadow" style="background-color:${character.color}"></div>
+        <div class="flex items-center gap-2 mb-0.5">
+          <span class="text-xs opacity-55">Cap. ${m.chapter}</span>
+          ${m.QR ? `<span class="text-[0.65rem] font-semibold bg-amber-400 text-amber-900 px-1.5 py-0.5 rounded">QR</span>` : ""}
+        </div>
+        <div class="font-semibold text-sm">${m.location}</div>
+        <div class="text-sm opacity-70 mt-0.5">${m.note}</div>
+      </div>`,
+      )
+      .join("");
+  }
+
+  function render() {
+    const character = characters.find((c) => c.id === selectedCharacterId);
+    document.getElementById("chapter-bar").style.width =
+      `${(currentChapter / maxChapter) * 100}%`;
+    document.getElementById("chapter-counter").textContent =
+      `${currentChapter} / ${maxChapter} capítulos`;
+    renderSelect(currentChapter);
+    renderCharacterSection(character);
+    renderTimeline(character, currentChapter);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const prev = document.getElementById("chapter-prev");
+    const next = document.getElementById("chapter-next");
+    const select = document.getElementById("character-select");
+
+    prev.addEventListener("click", () => {
+      if (currentChapter > 1) {
+        currentChapter--;
+        render();
+      }
+    });
+
+    next.addEventListener("click", () => {
+      if (currentChapter < maxChapter) {
+        currentChapter++;
+        render();
+      }
+    });
+
+    select.addEventListener("change", (e) => {
+      selectedCharacterId = e.target.value;
+      render();
+    });
+
+    render();
+  });
+</script>

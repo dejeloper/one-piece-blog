@@ -67,6 +67,27 @@ const name = "El viaje hacia la libertad";
         loader.style.pointerEvents = "auto";
       };
 
+      const waitForStylesheets = () => {
+        const links = Array.from(
+          document.querySelectorAll('link[rel="stylesheet"]')
+        );
+        const pending = links.filter((link) => !link.sheet);
+        if (pending.length === 0) return Promise.resolve();
+
+        const timeout = new Promise((resolve) => setTimeout(resolve, 1500));
+        const loaded = Promise.all(
+          pending.map(
+            (link) =>
+              new Promise((resolve) => {
+                link.addEventListener("load", resolve, { once: true });
+                link.addEventListener("error", resolve, { once: true });
+              })
+          )
+        );
+
+        return Promise.race([loaded, timeout]);
+      };
+
       hideLoader();
 
       document.addEventListener("astro:before-preparation", () => {
@@ -77,7 +98,7 @@ const name = "El viaje hacia la libertad";
 
       document.addEventListener("astro:page-load", () => {
         document.documentElement.style.scrollBehavior = "smooth";
-        hideLoader();
+        waitForStylesheets().then(hideLoader);
       });
     </script>
   </body>

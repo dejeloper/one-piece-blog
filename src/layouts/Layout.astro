@@ -66,8 +66,11 @@ const name = "El viaje hacia la libertad";
         const showLoader = () => {
           const loader = document.getElementById("transition-loader");
           if (!loader) return;
+          loader.style.transition = "none";
           loader.style.opacity = "1";
           loader.style.pointerEvents = "auto";
+          void loader.offsetWidth;
+          loader.style.transition = "";
         };
 
         const waitForStylesheets = () => {

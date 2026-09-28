@@ -53,53 +53,57 @@ const name = "El viaje hacia la libertad";
     <Footer />
 
     <script is:inline>
-      const hideLoader = () => {
-        const loader = document.getElementById("transition-loader");
-        if (!loader) return;
-        loader.style.opacity = "0";
-        loader.style.pointerEvents = "none";
-      };
+      if (!window.__transitionLoaderInit) {
+        window.__transitionLoaderInit = true;
 
-      const showLoader = () => {
-        const loader = document.getElementById("transition-loader");
-        if (!loader) return;
-        loader.style.opacity = "1";
-        loader.style.pointerEvents = "auto";
-      };
+        const hideLoader = () => {
+          const loader = document.getElementById("transition-loader");
+          if (!loader) return;
+          loader.style.opacity = "0";
+          loader.style.pointerEvents = "none";
+        };
 
-      const waitForStylesheets = () => {
-        const links = Array.from(
-          document.querySelectorAll('link[rel="stylesheet"]')
-        );
-        const pending = links.filter((link) => !link.sheet);
-        if (pending.length === 0) return Promise.resolve();
+        const showLoader = () => {
+          const loader = document.getElementById("transition-loader");
+          if (!loader) return;
+          loader.style.opacity = "1";
+          loader.style.pointerEvents = "auto";
+        };
 
-        const timeout = new Promise((resolve) => setTimeout(resolve, 1500));
-        const loaded = Promise.all(
-          pending.map(
-            (link) =>
-              new Promise((resolve) => {
-                link.addEventListener("load", resolve, { once: true });
-                link.addEventListener("error", resolve, { once: true });
-              })
-          )
-        );
+        const waitForStylesheets = () => {
+          const links = Array.from(
+            document.querySelectorAll('link[rel="stylesheet"]')
+          );
+          const pending = links.filter((link) => !link.sheet);
+          if (pending.length === 0) return Promise.resolve();
 
-        return Promise.race([loaded, timeout]);
-      };
+          const timeout = new Promise((resolve) => setTimeout(resolve, 1500));
+          const loaded = Promise.all(
+            pending.map(
+              (link) =>
+                new Promise((resolve) => {
+                  link.addEventListener("load", resolve, { once: true });
+                  link.addEventListener("error", resolve, { once: true });
+                })
+            )
+          );
 
-      hideLoader();
+          return Promise.race([loaded, timeout]);
+        };
 
-      document.addEventListener("astro:before-preparation", () => {
-        document.documentElement.style.scrollBehavior = "auto";
-        window.scrollTo(0, 0);
-        showLoader();
-      });
+        hideLoader();
 
-      document.addEventListener("astro:page-load", () => {
-        document.documentElement.style.scrollBehavior = "smooth";
-        waitForStylesheets().then(hideLoader);
-      });
+        document.addEventListener("astro:before-preparation", () => {
+          document.documentElement.style.scrollBehavior = "auto";
+          window.scrollTo(0, 0);
+          showLoader();
+        });
+
+        document.addEventListener("astro:page-load", () => {
+          document.documentElement.style.scrollBehavior = "smooth";
+          waitForStylesheets().then(hideLoader);
+        });
+      }
     </script>
   </body>
 </html>

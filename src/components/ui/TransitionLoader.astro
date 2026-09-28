@@ -9,8 +9,8 @@ const { show = true } = Astro.props;
   <div
     id="transition-loader"
     transition:persist
-    class="fixed inset-0 z-[9998] flex items-center justify-center backdrop-blur-md transition-opacity duration-700 ease-in-out pointer-events-auto opacity-100"
-    style="background: linear-gradient(180deg, hsl(var(--primary)/0.05) 0%, var(--background) 50%, hsl(var(--primary)/0.08) 100%); color: var(--foreground);"
+    class="backdrop-blur-md transition-opacity duration-700 ease-in-out pointer-events-auto opacity-100"
+    style="position: fixed; inset: 0; z-index: 9998; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, rgba(182,66,50,0.05) 0%, #f3e8e5 50%, rgba(232,92,65,0.08) 100%); color: #3a1f1a;"
     role="status"
     aria-busy="true"
   >

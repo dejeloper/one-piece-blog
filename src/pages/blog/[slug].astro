@@ -2,6 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import { getAllPostsSlugs, getPostsInfo } from "@lib/wp";
 import ChapterNavButton from "@components/ui/ChapterNavButton.astro";
+import ScrollToTop from "@components/ui/ScrollToTop.astro";
 
 const slug = Astro.params.slug;
 if (!slug) {
@@ -47,6 +48,7 @@ export async function getStaticPaths() {
     class="fixed top-0 left-0 h-1 bg-[var(--primary)] z-50 w-0"
   >
   </div>
+  <ScrollToTop />
   <div class="pt-8 pb-16 lg:pt-8 lg:pb-12 antialiased">
     <article class="prose prose-lg mx-auto max-w-3xl px-2">
       <div class="not-prose mb-5 px-1 sm:px-0">

@@ -44,6 +44,17 @@ export async function getStaticPaths() {
   </div>
   <div class="pt-8 pb-16 lg:pt-8 lg:pb-12 antialiased">
     <article class="prose prose-lg mx-auto max-w-3xl px-2">
+      <div class="not-prose mb-5 px-1 sm:px-0">
+        <ChapterNavButton
+          prevSlug={prevSlug}
+          prevTitle={prevTitle}
+          nextSlug={nextSlug}
+          nextTitle={nextTitle}
+          isFirst={isFirst}
+          isLast={isLast}
+        />
+      </div>
+
       <div
         class="rounded-[1.25rem] sm:rounded-2xl px-5 py-7 sm:px-9 sm:py-10 bg-gradient-to-b from-[rgba(250,239,236,0.96)] to-[rgba(250,239,236,0.92)] shadow-[0_10px_25px_rgba(58,31,26,0.08),inset_0_0_0_1px_rgba(196,138,125,0.25)]"
       >
@@ -93,17 +104,18 @@ export async function getStaticPaths() {
           set:html={content}
         />
 
-        <footer class="mt-12 pt-6 border-t border-gray-300/50">
-          <ChapterNavButton
-            prevSlug={prevSlug}
-            prevTitle={prevTitle}
-            nextSlug={nextSlug}
-            nextTitle={nextTitle}
-            isFirst={isFirst}
-            isLast={isLast}
-          />
-        </footer>
       </div>
+
+      <footer class="not-prose mt-5 px-1 sm:px-0">
+        <ChapterNavButton
+          prevSlug={prevSlug}
+          prevTitle={prevTitle}
+          nextSlug={nextSlug}
+          nextTitle={nextTitle}
+          isFirst={isFirst}
+          isLast={isLast}
+        />
+      </footer>
     </article>
   </div>
 

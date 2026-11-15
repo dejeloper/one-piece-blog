@@ -4,11 +4,64 @@ import { getAllChaptersOrdered } from "../lib/wp";
 import ChapterIndex from "../components/layouts/ChapterIndex.astro";
 
 const chapters = await getAllChaptersOrdered("historia");
+const chaptersPerPage = 10;
+const availableTags = Array.from(
+  new Map(
+    chapters.flatMap((chapter) => chapter.tags).map((tag) => [tag.slug, tag]),
+  ).values(),
+).sort((a, b) => a.name.localeCompare(b.name, "es"));
+
+const requestedTag = Astro.url.searchParams.get("tag")?.trim() ?? "";
+const selectedTag = availableTags.some((tag) => tag.slug === requestedTag)
+  ? requestedTag
+  : "";
+
+const filteredChapters = selectedTag
+  ? chapters.filter((chapter) =>
+      chapter.tags.some((tag) => tag.slug === selectedTag),
+    )
+  : chapters;
+
+const totalPages = Math.max(
+  1,
+  Math.ceil(filteredChapters.length / chaptersPerPage),
+);
+const requestedPage = Number(Astro.url.searchParams.get("page") ?? "1");
+
+const currentPage = Number.isInteger(requestedPage) && requestedPage > 0
+  ? Math.min(requestedPage, totalPages)
+  : 1;
+
+if (requestedTag !== selectedTag || requestedPage !== currentPage) {
+  const canonicalParams = new URLSearchParams();
+
+  if (selectedTag) canonicalParams.set("tag", selectedTag);
+  if (currentPage > 1) canonicalParams.set("page", String(currentPage));
+
+  const canonicalUrl = canonicalParams.size > 0
+    ? `/chapters?${canonicalParams.toString()}`
+    : "/chapters";
+
+  return Astro.redirect(canonicalUrl, 302);
+}
+
+const startIndex = (currentPage - 1) * chaptersPerPage;
+const paginatedChapters = filteredChapters.slice(
+  startIndex,
+  startIndex + chaptersPerPage,
+);
 ---
 
 <Layout
-  title="Lista de Capítulos - El viaje hacia la libertad"
+  title={`${currentPage > 1 ? `Página ${currentPage} - ` : ""}Lista de Capítulos - El viaje hacia la libertad`}
   description="Lista completa de todos los capítulos de mi aventura en búsqueda de la libertad."
 >
-  <ChapterIndex chapters={chapters} title="Lista de Capítulos" />
+  <ChapterIndex
+    chapters={paginatedChapters}
+    title="Lista de Capítulos"
+    currentPage={currentPage}
+    totalPages={totalPages}
+    availableTags={availableTags}
+    selectedTag={selectedTag}
+  />
 </Layout>

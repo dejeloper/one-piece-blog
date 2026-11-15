@@ -1,4 +1,6 @@
 ---
+import ChapterPagination from "../ui/ChapterPagination.astro";
+
 interface Chapter {
   id: number;
   title: string;
@@ -7,18 +9,42 @@ interface Chapter {
   date: string;
   slug: string;
   chapterNumber: number;
+  tags: ChapterTag[];
+}
+
+interface ChapterTag {
+  id: number;
+  name: string;
+  slug: string;
 }
 
 interface Props {
   chapters?: Chapter[];
   title?: string;
+  currentPage?: number;
+  totalPages?: number;
+  availableTags?: ChapterTag[];
+  selectedTag?: string;
 }
 
-const { chapters, title = "Lista de Capítulos" } = Astro.props;
+const {
+  chapters,
+  title = "Lista de Capítulos",
+  currentPage = 1,
+  totalPages = 1,
+  availableTags = [],
+  selectedTag = "",
+} = Astro.props;
 
 const formatChapterNumber = (num: number): string => {
   return num > 0 ? `Capítulo ${num}` : "Prólogo";
 };
+
+const tagHref = (tag: string): string =>
+  tag ? `/chapters?tag=${encodeURIComponent(tag)}` : "/chapters";
+
+const selectedTagName =
+  availableTags.find((tag) => tag.slug === selectedTag)?.name ?? "Todas";
 ---
 
 <section id="chapter-index" class="py-20 px-4 bg-[var(--background)]">
@@ -26,6 +52,68 @@ const formatChapterNumber = (num: number): string => {
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
       {title}
     </h2>
+
+    {
+      availableTags.length > 0 && (
+        <details class="group mx-auto mb-8 w-fit max-w-full">
+          <summary class="flex cursor-pointer list-none items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--card)] px-3 py-1.5 text-xs text-[var(--muted-foreground)] transition-colors hover:border-[var(--primary)]/50 hover:text-[var(--foreground)] [&::-webkit-details-marker]:hidden">
+            <span>Pistas:</span>
+            <strong class="max-w-48 truncate font-medium text-[var(--foreground)]">
+              {selectedTagName}
+            </strong>
+            <svg
+              aria-hidden="true"
+              class="h-3.5 w-3.5 transition-transform group-open:rotate-180"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+
+          <nav
+            aria-label="Filtrar capítulos por pista"
+            class="mt-2 flex max-w-[min(36rem,calc(100vw-2rem))] flex-wrap items-center justify-center gap-1.5 rounded-xl border border-[var(--border)] bg-[var(--card)] p-2 shadow-sm"
+          >
+            <a
+              href={tagHref("")}
+              aria-current={!selectedTag ? "page" : undefined}
+              class:list={[
+                "rounded-full px-2.5 py-1 text-xs transition-colors",
+                !selectedTag
+                  ? "bg-[var(--primary)]/10 font-medium text-[var(--primary)]"
+                  : "text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]",
+              ]}
+            >
+              Todas
+            </a>
+
+            {availableTags.map((tag) => (
+              <a
+                href={tagHref(tag.slug)}
+                aria-current={selectedTag === tag.slug ? "page" : undefined}
+                class:list={[
+                  "rounded-full px-2.5 py-1 text-xs transition-colors",
+                  selectedTag === tag.slug
+                    ? "bg-[var(--primary)]/10 font-medium text-[var(--primary)]"
+                    : "text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]",
+                ]}
+              >
+                {tag.name}
+              </a>
+            ))}
+          </nav>
+        </details>
+      )
+    }
+
+    <ChapterPagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      selectedTag={selectedTag}
+      position="superior"
+    />
 
     {
       chapters && chapters.length > 0 ? (
@@ -125,6 +213,13 @@ const formatChapterNumber = (num: number): string => {
         </div>
       )
     }
+
+    <ChapterPagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      selectedTag={selectedTag}
+      position="inferior"
+    />
 
     <!-- Botón para regresar al inicio -->
     <div class="text-center mt-12">

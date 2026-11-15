@@ -1,0 +1,88 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  selectedTag?: string;
+  position: "superior" | "inferior";
+}
+
+const { currentPage, totalPages, selectedTag = "", position } = Astro.props;
+
+const pageHref = (page: number): string => {
+  const params = new URLSearchParams();
+
+  if (selectedTag) params.set("tag", selectedTag);
+  if (page > 1) params.set("page", String(page));
+
+  return params.size > 0 ? `/chapters?${params.toString()}` : "/chapters";
+};
+---
+
+{
+  totalPages > 1 && (
+    <nav
+      aria-label={`Paginación ${position} de capítulos`}
+      class:list={[
+        "flex flex-wrap items-center justify-center gap-2",
+        position === "superior" ? "mb-10" : "mt-10",
+      ]}
+    >
+      {currentPage > 1 ? (
+        <a
+          href={pageHref(currentPage - 1)}
+          rel="prev"
+          data-astro-prefetch
+          class="rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-semibold transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
+        >
+          ← Anterior
+        </a>
+      ) : (
+        <span
+          aria-disabled="true"
+          class="cursor-not-allowed rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-semibold opacity-40"
+        >
+          ← Anterior
+        </span>
+      )}
+
+      {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+        (page) =>
+          page === currentPage ? (
+            <span
+              aria-current="page"
+              class="min-w-10 rounded-lg bg-[var(--primary)] px-3 py-2 text-center text-sm font-semibold text-[var(--primary-foreground)]"
+            >
+              {page}
+            </span>
+          ) : (
+            <a
+              href={pageHref(page)}
+              aria-label={`Ir a la página ${page}`}
+              data-astro-prefetch
+              class="min-w-10 rounded-lg border border-[var(--border)] px-3 py-2 text-center text-sm font-semibold transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
+            >
+              {page}
+            </a>
+          ),
+      )}
+
+      {currentPage < totalPages ? (
+        <a
+          href={pageHref(currentPage + 1)}
+          rel="next"
+          data-astro-prefetch
+          class="rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-semibold transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
+        >
+          Siguiente →
+        </a>
+      ) : (
+        <span
+          aria-disabled="true"
+          class="cursor-not-allowed rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-semibold opacity-40"
+        >
+          Siguiente →
+        </span>
+      )}
+    </nav>
+  )
+}

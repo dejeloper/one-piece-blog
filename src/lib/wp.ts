@@ -31,6 +31,13 @@ interface Chapter {
 	slug: string;
 	featuredImage: string;
 	chapterNumber: number;
+	tags: ChapterTag[];
+}
+
+interface ChapterTag {
+	id: number;
+	name: string;
+	slug: string;
 }
 
 export const getAllPostsSlugs = async () => {
@@ -205,6 +212,17 @@ export const getLatestPosts = async ({category, perPage = 10, requireAuth = fals
 			post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
 
 		const chapterNumber = extractChapterNumber(slug);
+		const tags: ChapterTag[] = (post._embedded?.['wp:term'] ?? [])
+			.flat()
+			.filter((term: any) =>
+				term.taxonomy === 'post_tag' ||
+				(term.taxonomy === 'category' && term.slug !== category)
+			)
+			.map((term: any) => ({
+				id: term.id,
+				name: term.name,
+				slug: term.slug,
+			}));
 
 		return {
 			id,
@@ -215,6 +233,7 @@ export const getLatestPosts = async ({category, perPage = 10, requireAuth = fals
 			slug,
 			featuredImage,
 			chapterNumber,
+			tags,
 		};
 	});
 
@@ -255,6 +274,17 @@ export const getAllChaptersOrdered = async (category: string, requireAuth: boole
 			post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
 
 		const chapterNumber = extractChapterNumber(slug);
+		const tags: ChapterTag[] = (post._embedded?.['wp:term'] ?? [])
+			.flat()
+			.filter((term: any) =>
+				term.taxonomy === 'post_tag' ||
+				(term.taxonomy === 'category' && term.slug !== category)
+			)
+			.map((term: any) => ({
+				id: term.id,
+				name: term.name,
+				slug: term.slug,
+			}));
 
 		return {
 			id,
@@ -265,6 +295,7 @@ export const getAllChaptersOrdered = async (category: string, requireAuth: boole
 			slug,
 			featuredImage,
 			chapterNumber,
+			tags,
 		};
 	});
 

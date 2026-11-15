@@ -22,7 +22,12 @@ const {
   prevTitle,
   nextTitle,
   chapterNumber,
+  tags,
 } = await getPostsInfo(slug);
+
+const clueTags = tags.filter(
+  (tag) => tag.slug.toLocaleLowerCase() !== "historia",
+);
 
 export async function getStaticPaths() {
   const slugs: string[] = await getAllPostsSlugs();
@@ -59,14 +64,25 @@ export async function getStaticPaths() {
         class="rounded-[1.25rem] sm:rounded-2xl px-5 py-7 sm:px-9 sm:py-10 bg-gradient-to-b from-[rgba(250,239,236,0.96)] to-[rgba(250,239,236,0.92)] shadow-[0_10px_25px_rgba(58,31,26,0.08),inset_0_0_0_1px_rgba(196,138,125,0.25)]"
       >
         <header class="text-center mb-10">
-          <span
-            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase bg-[var(--primary)]/10 text-[var(--primary)] mb-4"
-          >
-            Capítulo {chapterNumber}
-          </span>
+          <div class="not-prose mb-2 flex flex-col items-center justify-center gap-1">
+            <span
+              class="inline-flex items-center rounded-full bg-[var(--primary)]/10 px-2.5 py-0.5 text-[13px] font-semibold uppercase tracking-wide text-[var(--primary)]"
+            >
+              Capítulo {chapterNumber}
+            </span>
+            {clueTags.map((tag) => (
+              <a
+                href={`/chapters?tag=${encodeURIComponent(tag.slug)}`}
+                aria-label={`Ver capítulos de ${tag.name}`}
+                class="inline-flex items-center rounded-full border border-[var(--primary)]/20 bg-white/40 px-2.5 py-0.5 text-[11px] font-medium text-[var(--primary)] no-underline transition-colors hover:border-[var(--primary)]/40 hover:bg-white/70"
+              >
+                {tag.name}
+              </a>
+            ))}
+          </div>
           <h1
             class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight
-           text-[var(--foreground)] leading-tight mb-5"
+           text-[var(--foreground)] leading-tight mb-2"
           >
             {title}
           </h1>

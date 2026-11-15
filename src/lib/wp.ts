@@ -85,6 +85,17 @@ export const getPostsInfo = async (slug: string) => {
 	const authorName = data._embedded?.author?.[0]?.name || 'Unknown Author';
 	const authorAvatar = data._embedded?.author?.[0]?.avatar_urls?.['96'] || '';
 	const authorDescription = data._embedded?.author?.[0]?.description || '';
+	const tags: ChapterTag[] = (data._embedded?.['wp:term'] ?? [])
+		.flat()
+		.filter((term: any) =>
+			term.taxonomy === 'post_tag' ||
+			(term.taxonomy === 'category' && term.slug !== 'historia')
+		)
+		.map((term: any) => ({
+			id: term.id,
+			name: term.name,
+			slug: term.slug,
+		}));
 
 	const navigation = await getChapterNavigation(slug);
 	const chapterNumber = extractChapterNumber(slug);
@@ -99,6 +110,7 @@ export const getPostsInfo = async (slug: string) => {
 		authorName,
 		authorAvatar,
 		authorDescription,
+		tags,
 		chapterNumber,
 		...navigation
 	};

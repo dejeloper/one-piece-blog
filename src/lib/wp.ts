@@ -19,7 +19,8 @@ const CACHE_DURATIONS = {
 	chapters: 10,
 	categories: 30,
 	pages: 15,
-	documents: 10
+	documents: 10,
+	clues: 10
 } as const;
 
 interface Chapter {
@@ -419,6 +420,64 @@ export const getDocuments = async ({perPage = 10, requireAuth = false}: {perPage
 	} catch (error) {
 		// En caso de cualquier error, devolver array vacío para no romper la aplicación
 		console.warn('Error fetching documents:', error);
+		return [];
+	}
+};
+
+export const getClues = async ({perPage = 50, requireAuth = false}: {perPage?: number, requireAuth?: boolean} = {}) => {
+	try {
+		const cluesCategoryId = await getIdCategoryByName('Pistas');
+
+		if (!cluesCategoryId) return [];
+
+		const resultados = await fetchWithCache<any[]>(
+			`${apiURL}/posts?per_page=${perPage}&categories=${cluesCategoryId}&_embed`,
+			`clues_${perPage}_${requireAuth}`,
+			'clues',
+			requireAuth
+		);
+
+		if (!resultados || resultados.length === 0) return [];
+
+		return resultados.map((post: any) => {
+			const {
+				id,
+				title: {rendered: title},
+				excerpt: {rendered: excerptRaw},
+				content: {rendered: content},
+				date,
+				slug,
+			} = post;
+
+			const postTags: ChapterTag[] = (post._embedded?.['wp:term'] ?? [])
+				.flat()
+				.filter((term: any) =>
+					term.taxonomy === 'post_tag' || term.taxonomy === 'category'
+				)
+				.map((term: any) => ({
+					id: term.id,
+					name: term.name,
+					slug: term.slug,
+				}));
+
+			const embeddedImage = post._embedded?.['wp:featuredmedia']?.[0];
+			const contentImageMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+
+			return {
+				id,
+				title,
+				excerpt: excerptRaw.replace(/<[^>]*>/g, '').trim(),
+				content,
+				date,
+				slug,
+				featuredImage: embeddedImage?.source_url || contentImageMatch?.[1] || '',
+				featuredImageAlt: embeddedImage?.alt_text || title,
+				hasFeaturedImage: Boolean(embeddedImage?.source_url),
+				tags: postTags,
+			};
+		});
+	} catch (error) {
+		console.warn('Error fetching clues:', error);
 		return [];
 	}
 };

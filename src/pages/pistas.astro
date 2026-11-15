@@ -1,0 +1,184 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { clueSections, normalizeClueTag } from "../lib/clues";
+import { getAllChaptersOrdered, getClues } from "../lib/wp";
+
+const [clues, chapters] = await Promise.all([
+  getClues(),
+  getAllChaptersOrdered("historia"),
+]);
+const sections = clues
+  .map((clue) => {
+    const category = clue.tags.find((tag) =>
+      /^pista-\d+$/.test(normalizeClueTag(tag.slug)),
+    );
+    if (!category) return null;
+
+    const key = normalizeClueTag(category.slug);
+    const clueNumber = Number(key.replace("pista-", ""));
+    const relatedChapters = chapters.filter((chapter) =>
+      chapter.tags.some((tag) => normalizeClueTag(tag.slug) === key),
+    );
+    const configuredSection = clueSections.find((section) => section.key === key);
+    const chapterNumbers = relatedChapters.map((chapter) => chapter.chapterNumber);
+
+    return {
+      clue,
+      title: category.name,
+      clueNumber,
+      start: chapterNumbers.length
+        ? Math.min(...chapterNumbers)
+        : configuredSection?.start,
+      end: chapterNumbers.length
+        ? Math.max(...chapterNumbers)
+        : configuredSection?.end,
+    };
+  })
+  .filter((section) => section !== null)
+  .sort((a, b) => a.clueNumber - b.clueNumber);
+
+const cluesPerPage = 6;
+const totalPages = Math.max(1, Math.ceil(sections.length / cluesPerPage));
+const requestedPage = Number(Astro.url.searchParams.get("page") ?? "1");
+const currentPage = Number.isInteger(requestedPage) && requestedPage > 0
+  ? Math.min(requestedPage, totalPages)
+  : 1;
+
+if (requestedPage !== currentPage) {
+  return Astro.redirect(
+    currentPage === 1 ? "/pistas" : `/pistas?page=${currentPage}`,
+    302,
+  );
+}
+
+const startIndex = (currentPage - 1) * cluesPerPage;
+const paginatedSections = sections.slice(startIndex, startIndex + cluesPerPage);
+const pageHref = (page: number) =>
+  page === 1 ? "/pistas" : `/pistas?page=${page}`;
+---
+
+<Layout
+  title="Pistas - El viaje hacia la libertad"
+  description="Pistas y señales para acompañar la lectura de El viaje hacia la libertad."
+>
+  <main class="min-h-screen px-4 py-16 md:py-20">
+    <div class="mx-auto max-w-6xl">
+      <header class="mb-12 text-center">
+        <h1 class="text-4xl font-bold md:text-5xl">Pistas</h1>
+      </header>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        {
+          paginatedSections.map((section) => (
+            <article>
+              <a
+                href={`/pistas/${section.clue.slug}`}
+                data-astro-prefetch
+                aria-label={`Leer ${section.clue.title}`}
+                class="group relative block aspect-video overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-sm transition hover:border-[var(--primary)]/60 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--primary)]"
+              >
+                {section.clue.featuredImage ? (
+                  <img
+                    src={section.clue.featuredImage}
+                    alt={section.clue.featuredImageAlt}
+                    width="720"
+                    height="405"
+                    class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="flex h-full w-full items-center justify-center bg-[var(--muted)]/25 text-5xl" aria-hidden="true">
+                    🔍
+                  </div>
+                )}
+
+                <span class="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1.5 text-sm font-bold text-white shadow-md backdrop-blur-sm">
+                  {section.title}
+                </span>
+
+                <div class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/80 via-black/35 to-transparent p-4 pt-16 text-white">
+                  {section.start && section.end && (
+                    <span class="rounded-full bg-black/55 px-3 py-1.5 text-sm font-semibold backdrop-blur-sm">
+                      {section.start === section.end
+                        ? `Capítulo ${section.start}`
+                        : `Del capítulo ${section.start} al ${section.end}`}
+                    </span>
+                  )}
+                  <span class="rounded-full bg-[var(--primary)] px-3 py-1.5 text-sm font-semibold shadow-md transition group-hover:bg-[var(--accent)]">
+                    Leer más →
+                  </span>
+                </div>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+
+      {
+        totalPages > 1 && (
+          <nav
+            aria-label="Paginación de pistas"
+            class="mt-12 flex flex-wrap items-center justify-center gap-2"
+          >
+            {currentPage > 1 ? (
+              <a
+                href={pageHref(currentPage - 1)}
+                rel="prev"
+                data-astro-prefetch
+                class="rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-semibold transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
+              >
+                ← Anterior
+              </a>
+            ) : (
+              <span
+                aria-disabled="true"
+                class="cursor-not-allowed rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-semibold opacity-40"
+              >
+                ← Anterior
+              </span>
+            )}
+
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              (page) =>
+                page === currentPage ? (
+                  <span
+                    aria-current="page"
+                    class="min-w-10 rounded-lg bg-[var(--primary)] px-3 py-2 text-center text-sm font-semibold text-[var(--primary-foreground)]"
+                  >
+                    {page}
+                  </span>
+                ) : (
+                  <a
+                    href={pageHref(page)}
+                    aria-label={`Ir a la página ${page} de pistas`}
+                    data-astro-prefetch
+                    class="min-w-10 rounded-lg border border-[var(--border)] px-3 py-2 text-center text-sm font-semibold transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
+                  >
+                    {page}
+                  </a>
+                ),
+            )}
+
+            {currentPage < totalPages ? (
+              <a
+                href={pageHref(currentPage + 1)}
+                rel="next"
+                data-astro-prefetch
+                class="rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-semibold transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
+              >
+                Siguiente →
+              </a>
+            ) : (
+              <span
+                aria-disabled="true"
+                class="cursor-not-allowed rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-semibold opacity-40"
+              >
+                Siguiente →
+              </span>
+            )}
+          </nav>
+        )
+      }
+    </div>
+  </main>
+</Layout>

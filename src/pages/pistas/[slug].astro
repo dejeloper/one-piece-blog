@@ -1,0 +1,115 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { normalizeClueTag } from "../../lib/clues";
+import { getAllChaptersOrdered, getClues } from "../../lib/wp";
+
+const slug = Astro.params.slug;
+const [clues, chapters] = await Promise.all([
+  getClues(),
+  getAllChaptersOrdered("historia"),
+]);
+const clue = clues.find((item) => item.slug === slug);
+
+if (!clue) {
+  return Astro.redirect("/pistas", 302);
+}
+
+const clueCategory = clue.tags.find((tag) =>
+  /^pista-\d+$/.test(normalizeClueTag(tag.slug)),
+);
+const clueKey = clueCategory ? normalizeClueTag(clueCategory.slug) : "";
+const sectionChapters = clueKey
+  ? chapters.filter((chapter) =>
+      chapter.tags.some((tag) => normalizeClueTag(tag.slug) === clueKey),
+    )
+  : [];
+const chapterNumbers = sectionChapters.map((chapter) => chapter.chapterNumber);
+const firstChapter = chapterNumbers.length ? Math.min(...chapterNumbers) : null;
+const lastChapter = chapterNumbers.length ? Math.max(...chapterNumbers) : null;
+---
+
+<Layout
+  title={`${clue.title} - Pistas`}
+  description={clue.excerpt || "Una pista de El viaje hacia la libertad."}
+  ogimage={clue.featuredImage}
+>
+  <main class="min-h-screen px-4 py-12 md:py-16">
+    <article class="mx-auto max-w-4xl">
+      <a
+        href="/pistas"
+        data-astro-prefetch
+        class="mb-8 inline-flex items-center gap-2 font-semibold text-[var(--primary)] hover:underline"
+      >
+        ← Volver a todas las pistas
+      </a>
+
+      <div class="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-sm">
+        {
+          clue.hasFeaturedImage && clue.featuredImage && (
+            <img
+              src={clue.featuredImage}
+              alt={clue.featuredImageAlt}
+              width="960"
+              height="540"
+              class="aspect-video w-full object-cover"
+            />
+          )
+        }
+
+        <header class="border-b border-[var(--border)] p-6 md:p-10">
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <span class="rounded-full bg-[var(--primary)] px-3 py-1 text-sm font-semibold text-[var(--primary-foreground)]">
+              Pista
+            </span>
+            {
+              firstChapter && lastChapter && (
+                <span class="rounded-full bg-[var(--muted)]/40 px-3 py-1 text-sm font-semibold">
+                  {firstChapter === lastChapter
+                    ? `Capítulo ${firstChapter}`
+                    : `Capítulos ${firstChapter}–${lastChapter}`}
+                </span>
+              )
+            }
+          </div>
+          <h1 class="text-3xl font-bold md:text-5xl">{clue.title}</h1>
+        </header>
+
+        <div class="p-6 md:p-10">
+          <div
+            class="prose max-w-none prose-headings:text-[var(--foreground)] prose-p:text-[var(--foreground)] prose-a:text-[var(--primary)] prose-strong:text-[var(--foreground)] prose-blockquote:border-[var(--primary)] prose-blockquote:text-[var(--muted-foreground)]"
+            set:html={clue.content}
+          />
+        </div>
+
+        {
+          sectionChapters.length > 0 && (
+            <nav
+              aria-label="Capítulos relacionados con esta pista"
+              class="border-t border-[var(--border)] p-6 md:p-10"
+            >
+              <h2 class="mb-5 text-xl font-bold">Capítulos de esta pista</h2>
+              <div class="grid gap-3 sm:grid-cols-2">
+                {sectionChapters.map((chapter) => (
+                  <a
+                    href={`/blog/${chapter.slug}`}
+                    data-astro-prefetch
+                    class="group flex items-center gap-4 rounded-xl border border-[var(--border)] p-4 transition hover:border-[var(--primary)] hover:bg-[var(--primary)]/5"
+                  >
+                    <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-sm font-bold text-[var(--primary-foreground)]">
+                      {chapter.chapterNumber}
+                    </span>
+                    <span
+                      class="min-w-0 flex-1 font-semibold group-hover:text-[var(--primary)]"
+                      set:html={chapter.title}
+                    />
+                    <span aria-hidden="true" class="text-[var(--primary)]">→</span>
+                  </a>
+                ))}
+              </div>
+            </nav>
+          )
+        }
+      </div>
+    </article>
+  </main>
+</Layout>
